@@ -22,8 +22,8 @@ import { Vector2 } from "./src/Vector2.js";
 import { GameObject } from "./src/GameObject.js";
 import { GameLoop } from "./src/GameLoop.js";
 import { World } from "./src/World.js";
-import { Camera } from "./src/Camera.js";
-import { Input } from "./src/Input.js";
+// import { Camera } from "./src/Camera.js";
+// import { Input } from "./src/Input.js";
 import { Player } from "./src/Player.js";
 
 const gameWrapper = createGameWrapper();
