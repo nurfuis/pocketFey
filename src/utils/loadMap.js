@@ -1,10 +1,20 @@
 const debug = false;
 
-import mapList from "../../assets/stored_maps.json";
+let mapList = {};
+
+fetch("../../assets/stored_maps.json")
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    mapList = data;
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+  });
 
 export async function loadMap(int) {
   const mapPath = mapList[int];
-  
+
   if (debug) {
     console.log("Loading map:", mapPath);
   }

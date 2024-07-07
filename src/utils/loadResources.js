@@ -1,6 +1,16 @@
 const debug = false;
 
-import imageList from "../../assets/image_list.json";
+let imageList = {};
+
+fetch("../../assets/image_list.json")
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    imageList = data;
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+  });
 
 export async function loadResources() {
   let images = {};
@@ -23,7 +33,6 @@ export async function loadResources() {
     img.onload = () => {
       images[key].isLoaded = true;
       if (Object.values(images).every((image) => image.isLoaded)) {
-        
       }
     };
   });
