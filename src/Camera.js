@@ -1,4 +1,4 @@
-import gameParams from "../main.js"
+import { gameParams } from "../main.js";
 
 import { GameObject } from "./GameObject.js";
 import { events } from "./Events.js";
