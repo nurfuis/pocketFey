@@ -3,7 +3,7 @@ const debug = false;
 const MAP_ID = 0;
 const FOREGROUND = 2;
 
-let gameParams = {};
+export let gameParams = {};
 
 fetch("./config/gameParams.json")
   .then((response) => response.json())

@@ -1,7 +1,7 @@
 const debug = false;
 
 import { events } from "./Events.js";
-import gameParams from "../config/gameParams.json";
+import gameParams from "../main.js";
 
 export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";

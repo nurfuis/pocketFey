@@ -1,4 +1,4 @@
-import gameParams from "../config/gameParams.json";
+import gameParams from "../main.js"
 
 import { GameObject } from "./GameObject.js";
 import { events } from "./Events.js";
