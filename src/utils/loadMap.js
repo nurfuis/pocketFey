@@ -1,6 +1,6 @@
 const debug = false;
 
-let mapList = {};
+let mapList = [];
 
 fetch("../../assets/stored_maps.json")
   .then((response) => response.json())
