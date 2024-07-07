@@ -1,7 +1,7 @@
-import { Vector2 } from "./Vector2";
-import { Sprite } from "./Sprite";
-import { Animations } from "./Animations";
-import { FrameIndexPattern } from "./FrameIndexPattern";
+import { Vector2 } from "./Vector2.js";
+import { Sprite } from "./Sprite.js";
+import { Animations } from "./Animations.js";
+import { FrameIndexPattern } from "./FrameIndexPattern.js";
 import {
   PICK_UP_DOWN,
   STAND_DOWN,

@@ -1,6 +1,6 @@
-import { Sprite } from "./Sprite";
-import { Vector2 } from "./Vector2";
-import { GameObject } from "./GameObject";
+import { Sprite } from "./Sprite.js";
+import { Vector2 } from "./Vector2.js";
+import { GameObject } from "./GameObject.js";
 
 export class Tile extends GameObject {
   constructor(chunk, i, tilesets, tileWidth, tileHeight, coords) {

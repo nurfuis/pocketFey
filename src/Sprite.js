@@ -1,5 +1,5 @@
-import { GameObject } from "./GameObject";
-import { Vector2 } from "./Vector2";
+import { GameObject } from "./GameObject.js";
+import { Vector2 } from "./Vector2.js";
 export class Sprite extends GameObject {
   constructor({
     resource,

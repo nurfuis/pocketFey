@@ -1,5 +1,5 @@
-import { GameObject } from "./GameObject";
-import { Chunk } from "./Chunk";
+import { GameObject } from "./GameObject.js";
+import { Chunk } from "./Chunk.js";
 
 export class Layer extends GameObject {
   constructor(layer, tileWidth, tileHeight, tileSets) {

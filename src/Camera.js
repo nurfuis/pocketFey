@@ -1,8 +1,8 @@
 import gameParams from "../config/gameParams.json";
 
-import { GameObject } from "./GameObject";
-import { events } from "./Events";
-import { Vector2 } from "./Vector2";
+import { GameObject } from "./GameObject.js";
+import { events } from "./Events.js";
+import { Vector2 } from "./Vector2.js";
 
 const displayWidth = gameParams.width;
 const displayHeight = gameParams.height;
