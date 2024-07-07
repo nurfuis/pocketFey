@@ -17,11 +17,11 @@ import {
   ATTACK_RIGHT,
   ATTACK_DOWN,
 } from "./animations/playerAnimations";
-import { DOWN, UP, LEFT, RIGHT } from "./Input";
+import { DOWN, UP, LEFT, RIGHT } from "./Input.js";
 import { events } from "./Events";
 
-import { GameObject } from "./GameObject";
-import { globalCooldownDuration } from "./constants";
+import { GameObject } from "./GameObject.js";
+import { globalCooldownDuration } from "./constants.js";
 
 export class Player extends GameObject {
   constructor(resources) {
