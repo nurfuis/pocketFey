@@ -3,7 +3,18 @@ const debug = false;
 const MAP_ID = 0;
 const FOREGROUND = 2;
 
-import gameParams from "./config/gameParams.json";
+let gameParams = {};
+
+fetch("./config/gameParams.json")
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    gameParams = data;
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+  });
+
 import { loadResources } from "./src/utils/loadResources";
 import { loadMap } from "./src/utils/loadMap";
 
