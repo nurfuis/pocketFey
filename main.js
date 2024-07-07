@@ -15,16 +15,16 @@ fetch("./config/gameParams.json")
     console.error("Error fetching data:", error);
   });
 
-import { loadResources } from "./src/utils/loadResources";
-import { loadMap } from "./src/utils/loadMap";
+import { loadResources } from "./src/utils/loadResources.js";
+import { loadMap } from "./src/utils/loadMap.js";
 
-import { Vector2 } from "./src/Vector2";
-import { GameObject } from "./src/GameObject";
-import { GameLoop } from "./src/gameLoop";
-import { World } from "./src/World";
-import { Camera } from "./src/Camera";
-import { Input } from "./src/Input";
-import { Player } from "./src/Player";
+import { Vector2 } from "./src/Vector2.js";
+import { GameObject } from "./src/GameObject.js";
+import { GameLoop } from "./src/gameLoop.js";
+import { World } from "./src/World.js";
+import { Camera } from "./src/Camera.js";
+import { Input } from "./src/Input.js";
+import { Player } from "./src/Player.js";
 
 const gameWrapper = createGameWrapper();
 
