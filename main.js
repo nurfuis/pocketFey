@@ -20,7 +20,7 @@ import { loadMap } from "./src/utils/loadMap.js";
 
 import { Vector2 } from "./src/Vector2.js";
 import { GameObject } from "./src/GameObject.js";
-import { GameLoop } from "./src/gameLoop.js";
+import { GameLoop } from "./src/GameLoop.js";
 import { World } from "./src/World.js";
 import { Camera } from "./src/Camera.js";
 import { Input } from "./src/Input.js";
