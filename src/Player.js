@@ -18,7 +18,7 @@ import {
   ATTACK_DOWN,
 } from "./animations/playerAnimations.js";
 import { DOWN, UP, LEFT, RIGHT } from "./Input.js";
-import { events } from "./Events";
+import { events } from "./Events.js";
 
 import { GameObject } from "./GameObject.js";
 import { globalCooldownDuration } from "./constants.js";
