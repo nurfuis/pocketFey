@@ -16,7 +16,7 @@ import {
   ATTACK_UP,
   ATTACK_RIGHT,
   ATTACK_DOWN,
-} from "./animations/playerAnimations";
+} from "./animations/playerAnimations.js";
 import { DOWN, UP, LEFT, RIGHT } from "./Input.js";
 import { events } from "./Events";
 
