@@ -2,7 +2,7 @@ const debug = false;
 
 let imageList = {};
 
-fetch("../../assets/image_list.json")
+fetch("/pocketFey/assets/image_list.json")
   .then((response) => response.json())
   .then((data) => {
     console.log(data);

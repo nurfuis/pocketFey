@@ -2,7 +2,7 @@ const debug = false;
 
 let mapList = [];
 
-fetch("../../assets/stored_maps.json")
+fetch("/pocketFey/assets/stored_maps.json")
   .then((response) => response.json())
   .then((data) => {
     console.log(data);
