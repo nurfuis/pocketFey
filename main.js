@@ -32,11 +32,11 @@ const gameCanvasMain = createGameCanvasMain();
 const gameCtx = gameCanvasMain.getContext("2d");
 
 const resources = await loadResources();
+const mapData = await loadMap(MAP_ID);
+
 
 const main = new GameObject({ position: new Vector2(0, 0) });
-
-const world = new World(MAP_ID);
-const mapData = await loadMap(world.mapId);
+const world = new World();
 
 world.build(resources, mapData);
 
