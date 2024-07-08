@@ -1,6 +1,6 @@
 {
-  "air": "./assets/sprites/air.png",
-  "feyBrewsterTileSet": "./assets/sprites/feyBrewsterTileSet.png",
-  "player": "./assets/sprites/player.png",
-  "shadow": "./assets/sprites/shadow.png"
+  "air": "/pocketFey/assets/sprites/air.png",
+  "feyBrewsterTileSet": "/pocketFey/assets/sprites/feyBrewsterTileSet.png",
+  "player": "/pocketFey/assets/sprites/player.png",
+  "shadow": "/pocketFey/assets/sprites/shadow.png"
 }
