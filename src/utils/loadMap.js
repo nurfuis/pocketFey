@@ -13,6 +13,7 @@ fetch("/pocketFey/assets/stored_maps.json")
   });
 
 export async function loadMap(int) {
+  console.log(mapList, int)
   const mapPath = mapList[int];
 
   if (debug) {
