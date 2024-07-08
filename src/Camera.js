@@ -1,7 +1,11 @@
 import { GameObject } from "./GameObject.js";
 import { events } from "./Events.js";
 import { Vector2 } from "./Vector2.js";
+
 import { gameParams } from "../config/gameParams.js";
+const displayWidth = gameParams.width;
+const displayHeight = gameParams.height;
+
 import {
   NORTH,
   SOUTH,
@@ -16,10 +20,7 @@ import {
 } from "./Input.js";
 
 export class Camera extends GameObject {
-  constructor(worlds) {
-
-    this.displayWidth = gameParams.width;
-    this.displayHeight = gameParams.height;
+  constructor(world) {
     super({});
     this.previousPosition = null;
     this.homePosition = new Vector2(0, 0);
