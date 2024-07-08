@@ -3,13 +3,13 @@ const debug = false;
 export async function loadResources() {
   let images = {};
   let imageList = {
-    air: "/pocketFey/assets/sprites/air.png",
-    feyBrewsterTileSet: "/pocketFey/assets/sprites/feyBrewsterTileSet.png",
-    player: "/pocketFey/assets/sprites/player.png",
-    shadow: "/pocketFey/assets/sprites/shadow.png",
+    air: "/assets/sprites/air.png",
+    feyBrewsterTileSet: "/assets/sprites/feyBrewsterTileSet.png",
+    player: "/assets/sprites/player.png",
+    shadow: "/assets/sprites/shadow.png",
   };
 
-  fetch("/pocketFey/assets/image_list.json")
+  fetch("/assets/image_list.json")
     .then((response) => response.json())
     .then((data) => {
       console.log(data);

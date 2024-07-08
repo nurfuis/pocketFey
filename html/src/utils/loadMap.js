@@ -4,7 +4,7 @@ export async function loadMap(int) {
   let mapList;
 
   try {
-    const response = await fetch("/pocketFey/assets/stored_maps.json");
+    const response = await fetch("/assets/stored_maps.json");
     if (!response.ok) {
       throw new Error(`Error fetching map list: ${response.statusText}`);
     }
