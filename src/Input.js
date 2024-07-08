@@ -266,7 +266,7 @@ export class Input {
       const posX = (tileX - offsetX) * this.tileWidth;
       const posY = (tileY - offsetY) * this.tileHeight;
 
-      console.log("Cursor:", posX, posY);
+      // console.log("Cursor:", posX, posY);
     });
 
     document.addEventListener("mousedown", (e) => {
