@@ -3,15 +3,19 @@ const debug = true;
 export async function loadMap(int) {
   let mapList;
 
-  fetch("/pocketFey/assets/stored_maps.json")
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      mapList = data;
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
+  try {
+    const response = await fetch("/pocketFey/assets/stored_maps.json");
+    if (!response.ok) {
+      throw new Error(`Error fetching map list: ${response.statusText}`);
+    }
+    const data = await response.json();
+    console.log(data);
+    mapList = data;
+  } catch (error) {
+    console.error("Error fetching map list:", error);
+    return null; // Or handle the error differently
+  }
+
   console.log(mapList, int);
   const mapPath = mapList[int];
 
