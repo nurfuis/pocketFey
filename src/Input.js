@@ -1,7 +1,7 @@
 const debug = false;
 
 import { events } from "./Events.js";
-import { gameParams } from "../main.js";
+import { gameParams } from "../config/gameParams.js";
 export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";
 export const UP = "UP";
@@ -251,7 +251,7 @@ export class Input {
       const windowX = window.innerWidth;
 
       const scale = windowX / gameParams.width;
-      
+
       const windowY = gameParams.height * scale;
 
       // size of scaled tiles
@@ -259,7 +259,7 @@ export class Input {
       const scaledY = Math.floor(windowY / tilesDown); // to each other
 
       // grid cell
-      const tileX = Math.floor(cursorX / scaledX)  - 1;// magic adjustment
+      const tileX = Math.floor(cursorX / scaledX) - 1; // magic adjustment
       const tileY = Math.floor(cursorY / scaledY);
 
       // tile coordinates

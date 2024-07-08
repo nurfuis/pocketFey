@@ -3,17 +3,7 @@ const debug = false;
 const MAP_ID = 0;
 const FOREGROUND = 2;
 
-export let gameParams = {};
-
-fetch("./config/gameParams.json")
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-    gameParams = data;
-  })
-  .catch((error) => {
-    console.error("Error fetching data:", error);
-  });
+import { gameParams } from "./config/gameParams.js";
 
 import { loadResources } from "./src/utils/loadResources.js";
 import { loadMap } from "./src/utils/loadMap.js";
@@ -33,7 +23,6 @@ const gameCtx = gameCanvasMain.getContext("2d");
 
 const resources = await loadResources();
 const mapData = await loadMap(MAP_ID);
-
 
 const main = new GameObject({ position: new Vector2(0, 0) });
 const world = new World();
