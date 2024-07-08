@@ -1,5 +1,6 @@
 {
   "air": "./assets/sprites/air.png",
   "feyBrewsterTileSet": "./assets/sprites/feyBrewsterTileSet.png",
+  "player": "./assets/sprites/player.png",
   "shadow": "./assets/sprites/shadow.png"
 }
