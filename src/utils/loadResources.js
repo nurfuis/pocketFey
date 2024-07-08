@@ -2,7 +2,12 @@ const debug = false;
 
 export async function loadResources() {
   let images = {};
-  let imageList = {};
+  let imageList = {
+    air: "/pocketFey/assets/sprites/air.png",
+    feyBrewsterTileSet: "/pocketFey/assets/sprites/feyBrewsterTileSet.png",
+    player: "/pocketFey/assets/sprites/player.png",
+    shadow: "/pocketFey/assets/sprites/shadow.png",
+  };
 
   fetch("/pocketFey/assets/image_list.json")
     .then((response) => response.json())
