@@ -46,7 +46,7 @@ export class Player extends GameObject {
     this.shadow = new Sprite({
       resource: resources.images.shadow,
       frameSize: new Vector2(32, 32),
-      position: new Vector2(-16, 0),
+      position: new Vector2(-32, -49),
       scale: 2,
     });
     this.body = new Sprite({
@@ -56,7 +56,7 @@ export class Player extends GameObject {
       vFrames: 8,
       frame: 1,
       scale: 1,
-      position: new Vector2(0, 0), // offset x, y
+      position: new Vector2(-16, -52), // offset x, y
       animations: new Animations({
         standDown: new FrameIndexPattern(STAND_DOWN),
         standUp: new FrameIndexPattern(STAND_UP),
@@ -97,13 +97,18 @@ export class Player extends GameObject {
   }
 
   step(delta, root) {
+    // Get the chunk and tile for a givien position
+    const layer = this.parent;
+    const world = layer.parent;
+
     if (this.itemPickUpTime > 0) {
       this.workOnItemPickUp(delta);
     }
 
     const { input } = root;
+    const { automatedInput } = root;
 
-    this.direction = input.direction;
+    this.direction = input.direction || automatedInput.direction;
 
     this.keyPress = input.heldKeys;
 
@@ -113,38 +118,47 @@ export class Player extends GameObject {
 
     if (this.keyPress.length > 0 && this.gcd <= 0) {
       this.gcd += globalCooldownDuration;
-      const layer = this.parent;
-      const world = layer.parent;
 
-      console.log(input.heldKeys, world.children);
+      console.log(getTile(this.position, world).currentTile.id);
     }
 
     if (!!this.direction) {
       this.facingDirection = this.direction;
+      let nextX = this.position.x;
+      let nextY = this.position.y;
 
       switch (this.direction) {
         case LEFT:
-          this.position.x -= this.speed;
+          nextX -= this.speed;
           this.body.animations.play("walkLeft");
           break;
 
         case RIGHT:
-          this.position.x += this.speed;
+          nextX += this.speed;
           this.body.animations.play("walkRight");
           break;
 
         case UP:
-          this.position.y -= this.speed;
+          nextY -= this.speed;
           this.body.animations.play("walkUp");
           break;
 
         case DOWN:
-          this.position.y += this.speed;
+          nextY += this.speed;
           this.body.animations.play("walkDown");
           break;
 
         default:
           break;
+      }
+
+      const nextPosition = new Vector2(nextX, nextY);
+      const result = getTile(nextPosition, world);
+
+      if (!!result.currentChunk) {
+        this.position = nextPosition;
+      } else {
+        // no chunk there
       }
     } else {
       switch (this.facingDirection) {
@@ -170,13 +184,45 @@ export class Player extends GameObject {
     }
 
     this.tryEmitPosition();
+
+    function getTile(position, world) {
+      const background = world.children[0];
+      let currentChunk;
+      let currentTile;
+      if (background.children.length > 0) {
+        background.children.forEach((chunk) => {
+          if (
+            position.x >= chunk.position.x &&
+            position.x < chunk.position.x + chunk.width &&
+            position.y >= chunk.position.y &&
+            position.y < chunk.position.y + chunk.height
+          )
+            currentChunk = chunk;
+        });
+      }
+
+      if (!!currentChunk) {
+        currentChunk.children.forEach((tile) => {
+          if (
+            Math.abs(position.x) >= tile.position.x &&
+            Math.abs(position.x) < tile.position.x + tile.width &&
+            Math.abs(position.y) >= tile.position.y &&
+            Math.abs(position.y) < tile.position.y + tile.height
+          )
+            currentTile = tile;
+        });
+      } else {
+        currentTile = undefined;
+      }
+      return { currentChunk, currentTile };
+    }
   }
 
   drawImage(ctx) {
     const posX = this.position.x;
     const posY = this.position.y;
 
-    // ctx.fillText(`Player: ${posX}, ${posY}  `, posX, posY);
+    ctx.fillText(`Player: ${posX}, ${posY}  `, posX, posY + 16);
 
     // ctx.beginPath();
 

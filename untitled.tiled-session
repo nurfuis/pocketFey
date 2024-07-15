@@ -3,17 +3,20 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "assets/maps/world.tmj",
     "expandedProjectPaths": [
+        "assets",
+        "assets/maps",
+        "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "assets/maps/world.tmj": {
-            "scale": 0.81640625,
-            "selectedLayer": 2,
+            "scale": 1,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 0,
-                "y": 0.6124401913874635
+                "x": -174,
+                "y": 142.5
             }
         },
         "assets/maps/world.tmj#tileSet": {
@@ -38,6 +41,8 @@
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "json",
     "openFiles": [
+        "assets/maps/world.tmj",
+        "assets/tileSet.tsx"
     ],
     "project": "untitled.tiled-project",
     "recentFiles": [

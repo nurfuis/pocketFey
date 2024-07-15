@@ -30,7 +30,7 @@ export class Chunk extends GameObject {
     const layerName = parent.name;
 
     if (this.showGrid && layerName == "background") {
-      ctx.fillText(`CHUNK: ${posX}, ${posY}  `, posX, posY + 8);
+      ctx.fillText(`CHUNK: ${posX}, ${posY}  `, posX, posY - 8);
 
       ctx.strokeStyle = "lightblue";
       ctx.lineWidth = 2;

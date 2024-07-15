@@ -51,6 +51,8 @@ export class Tile extends GameObject {
     if (this.showGrid && layerName == "background") {
       ctx.strokeStyle = this.strokeColor;
       ctx.lineWidth = 1;
+      ctx.fillText(`x${this.position.x},`, posX, posY + 16);
+      ctx.fillText(`y${this.position.y}  `, posX, posY + 26);
 
       ctx.stroke();
 

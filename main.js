@@ -36,8 +36,8 @@ const camera = new Camera(world);
 main.addChild(camera);
 
 const input = new Input(world, camera);
-// main.input = input;
-main.input = new AutomatedInput();
+main.input = input;
+main.automatedInput = new AutomatedInput();
 
 const player = new Player(resources);
 world.children[FOREGROUND].addChild(player);
