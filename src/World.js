@@ -2,10 +2,8 @@ import { GameObject } from "./GameObject.js";
 import { Layer } from "./Layer.js";
 
 export class World extends GameObject {
-  constructor(mapId) {
+  constructor() {
     super({});
-
-    this.mapId = mapId;
 
     this.tilesets = [];
 
@@ -43,7 +41,7 @@ export class World extends GameObject {
     for (const tileSet of mapData["tilesets"]) {
       const stub = tileSet["source"].split("/");
       const filePath = stub[stub.length - 1].replace(".tsx", "");
-
+      console.log(filePath);
       this.tilesets.push({
         firstgid: tileSet["firstgid"],
         source: resources.images[filePath],
@@ -54,7 +52,12 @@ export class World extends GameObject {
     this.tileHeight = mapData["tileheight"];
 
     for (const layer of mapData["layers"]) {
-      const newLayer = new Layer(layer, this.tileWidth, this.tileHeight, this.tilesets);
+      const newLayer = new Layer(
+        layer,
+        this.tileWidth,
+        this.tileHeight,
+        this.tilesets
+      );
       this.addChild(newLayer);
     }
   }

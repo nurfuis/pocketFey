@@ -9,14 +9,12 @@ export async function loadMap(int) {
       throw new Error(`Error fetching map list: ${response.statusText}`);
     }
     const data = await response.json();
-    console.log(data);
     mapList = data;
   } catch (error) {
     console.error("Error fetching map list:", error);
     return null; // Or handle the error differently
   }
 
-  console.log(mapList, int);
   const mapPath = mapList[int];
 
   if (debug) {

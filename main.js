@@ -1,7 +1,7 @@
 const debug = false;
 
 const MAP_ID = 0;
-const FOREGROUND = 2;
+const FOREGROUND = 1;
 
 import { gameParams } from "./config/gameParams.js";
 
@@ -15,6 +15,7 @@ import { World } from "./src/World.js";
 import { Camera } from "./src/Camera.js";
 import { Input } from "./src/Input.js";
 import { Player } from "./src/Player.js";
+import { AutomatedInput } from "./src/utils/AutomatedInput.js";
 
 const gameWrapper = createGameWrapper();
 
@@ -35,7 +36,8 @@ const camera = new Camera(world);
 main.addChild(camera);
 
 const input = new Input(world, camera);
-main.input = input;
+// main.input = input;
+main.input = new AutomatedInput();
 
 const player = new Player(resources);
 world.children[FOREGROUND].addChild(player);

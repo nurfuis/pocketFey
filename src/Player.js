@@ -28,7 +28,7 @@ export class Player extends GameObject {
     super({
       position: new Vector2(0, 0),
     });
-    this.showGrid = true;
+    this.showGrid = false;
     this.gcd = 0;
     this.shape = "circle";
 
@@ -37,7 +37,7 @@ export class Player extends GameObject {
     this.radius = 16;
 
     // speed
-    this.speed = 3;
+    this.speed = 1;
 
     // direction
     this.facingDirection = DOWN;
@@ -46,7 +46,7 @@ export class Player extends GameObject {
     this.shadow = new Sprite({
       resource: resources.images.shadow,
       frameSize: new Vector2(32, 32),
-      position: new Vector2(-16, 10),
+      position: new Vector2(-16, 0),
       scale: 2,
     });
     this.body = new Sprite({
@@ -176,20 +176,20 @@ export class Player extends GameObject {
     const posX = this.position.x;
     const posY = this.position.y;
 
-    ctx.fillText(`Player: ${posX}, ${posY}  `, posX, posY);
+    // ctx.fillText(`Player: ${posX}, ${posY}  `, posX, posY);
 
-    ctx.beginPath();
+    // ctx.beginPath();
 
-    ctx.rect(posX, posY, this.width, this.height);
+    // ctx.rect(posX, posY, this.width, this.height);
 
-    if (this.showGrid) {
-      ctx.strokeStyle = "blue";
-      ctx.lineWidth = 1;
+    // if (this.showGrid) {
+    //   ctx.strokeStyle = "blue";
+    //   ctx.lineWidth = 1;
 
-      ctx.stroke();
-    }
-    ctx.closePath();
+    //   ctx.stroke();
+    // }
+    // ctx.closePath();
 
-    ctx.lineWidth = 1;
+    // ctx.lineWidth = 1;
   }
 }

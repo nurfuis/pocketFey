@@ -4,7 +4,7 @@ export async function loadResources() {
   let images = {};
   let imageList = {
     air: "/assets/sprites/air.png",
-    feyBrewsterTileSet: "/assets/sprites/feyBrewsterTileSet.png",
+    tileSet: "/assets/sprites/tileSet.png",
     player: "/assets/sprites/player.png",
     shadow: "/assets/sprites/shadow.png",
   };
@@ -12,7 +12,6 @@ export async function loadResources() {
   fetch("/assets/image_list.json")
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       imageList = data;
     })
     .catch((error) => {
