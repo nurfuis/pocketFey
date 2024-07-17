@@ -1,7 +1,7 @@
 const debug = false;
 
 import { events } from "./Events.js";
-import { gameParams } from "../config/gameParams.js";
+import { gameParams } from "../config/constants.js";
 export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";
 export const UP = "UP";
@@ -45,10 +45,10 @@ export const NUMPAD9 = "NUMPAD9";
 export const NUMPAD0 = "NUMPAD0";
 
 export class Input {
-  constructor(world, camera) {
+  constructor(tileWidth, tileHeight, camera) {
     this.camera = camera;
-    this.tileWidth = world.tileWidth;
-    this.tileHeight = world.tileHeight;
+    this.tileWidth = tileWidth;
+    this.tileHeight = tileHeight;
 
     this.textInput = document.querySelector("#textInput");
     this.cursorTarget = document.querySelectorAll(".cursorTarget");

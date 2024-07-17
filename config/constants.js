@@ -1,3 +1,5 @@
+export const globalCooldownDuration = 1500;
+
 export const gameParams = {
   width: 800,
   height: 600,
@@ -7,3 +9,5 @@ export const gameParams = {
   viewDistanceX: 1,
   viewDistanceY: 1,
 };
+
+export const foreground_id = 1;

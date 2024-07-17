@@ -4,19 +4,11 @@ export async function loadResources() {
   let images = {};
   let imageList = {
     air: "/assets/sprites/air.png",
-    tileSet: "/assets/sprites/tileSet.png",
+    tileSet: "/assets/sprites/base.png",
     player: "/assets/sprites/player.png",
     shadow: "/assets/sprites/shadow.png",
   };
 
-  fetch("/assets/image_list.json")
-    .then((response) => response.json())
-    .then((data) => {
-      imageList = data;
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
   Object.keys(imageList).forEach((key) => {
     const img = new Image();
     img.src = imageList[key];

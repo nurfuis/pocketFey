@@ -37,14 +37,18 @@ export class World extends GameObject {
     // }
   }
 
-  build(resources, mapData) {
+  build(mapData) {
     for (const tileSet of mapData["tilesets"]) {
-      const stub = tileSet["source"].split("/");
-      const filePath = stub[stub.length - 1].replace(".tsx", "");
-      console.log(filePath);
+      const img = new Image();
+      img.src = tileSet["image"];
+
+      const a = { image: img, width: null, height: null, isLoaded: true };
+      a.width = tileSet["imagewidth"];
+      a.height = tileSet["imageheight"];
+
       this.tilesets.push({
         firstgid: tileSet["firstgid"],
-        source: resources.images[filePath],
+        source: a,
       });
     }
 

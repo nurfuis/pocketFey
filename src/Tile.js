@@ -18,7 +18,7 @@ export class Tile extends GameObject {
 
     this.source = this.findMatchingTileset();
 
-    this.showGrid = true;
+    this.showGrid = false;
 
     if (!!this.source) {
       const hFrames = this.source.image.width / this.width;
@@ -51,8 +51,8 @@ export class Tile extends GameObject {
     if (this.showGrid && layerName == "background") {
       ctx.strokeStyle = this.strokeColor;
       ctx.lineWidth = 1;
-      ctx.fillText(`x${this.position.x},`, posX, posY + 16);
-      ctx.fillText(`y${this.position.y}  `, posX, posY + 26);
+      // ctx.fillText(`x${this.position.x},`, posX, posY + 16);
+      // ctx.fillText(`y${this.position.y}  `, posX, posY + 26);
 
       ctx.stroke();
 

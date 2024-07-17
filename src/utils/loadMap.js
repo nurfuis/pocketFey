@@ -1,21 +1,7 @@
 const debug = true;
 
-export async function loadMap(int) {
-  let mapList;
-
-  try {
-    const response = await fetch("/assets/stored_maps.json");
-    if (!response.ok) {
-      throw new Error(`Error fetching map list: ${response.statusText}`);
-    }
-    const data = await response.json();
-    mapList = data;
-  } catch (error) {
-    console.error("Error fetching map list:", error);
-    return null; // Or handle the error differently
-  }
-
-  const mapPath = mapList[int];
+export async function loadMap() {
+  const mapPath = "./world.tmj";
 
   if (debug) {
     console.log("Loading map:", mapPath);
@@ -30,6 +16,6 @@ export async function loadMap(int) {
     return mapData;
   } catch (error) {
     console.error("Error loading map:", error);
-    return null; // Or handle the error differently
+    return null;
   }
 }

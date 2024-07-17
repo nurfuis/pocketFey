@@ -21,13 +21,14 @@ import { DOWN, UP, LEFT, RIGHT } from "./Input.js";
 import { events } from "./Events.js";
 
 import { GameObject } from "./GameObject.js";
-import { globalCooldownDuration } from "./constants.js";
+import { globalCooldownDuration } from "../config/constants.js";
 
 export class Player extends GameObject {
   constructor(resources) {
     super({
-      position: new Vector2(0, 0),
+      position: new Vector2(48, 48),
     });
+    this.useAutoInput = false;
     this.showGrid = false;
     this.gcd = 0;
     this.shape = "circle";
@@ -37,7 +38,7 @@ export class Player extends GameObject {
     this.radius = 16;
 
     // speed
-    this.speed = 1;
+    this.speed = 2;
 
     // direction
     this.facingDirection = DOWN;
@@ -77,6 +78,8 @@ export class Player extends GameObject {
     this.addChild(this.shadow);
     this.addChild(this.body);
 
+    events.on("F3", this, () => (this.useAutoInput = !this.useAutoInput));
+
     events.on("PLAYER_PICKS_UP_ITEM", this, (data) => {
       this.onPickUpItem(data);
     });
@@ -108,7 +111,11 @@ export class Player extends GameObject {
     const { input } = root;
     const { automatedInput } = root;
 
-    this.direction = input.direction || automatedInput.direction;
+    if (this.useAutoInput) {
+      this.direction = input.direction || automatedInput.direction;
+    } else {
+      this.direction = input.direction;
+    }
 
     this.keyPress = input.heldKeys;
 
@@ -119,7 +126,7 @@ export class Player extends GameObject {
     if (this.keyPress.length > 0 && this.gcd <= 0) {
       this.gcd += globalCooldownDuration;
 
-      console.log(getTile(this.position, world).currentTile.id);
+      console.log(getTile(this.position, world).currentTile.id || undefined);
     }
 
     if (!!this.direction) {
@@ -155,7 +162,11 @@ export class Player extends GameObject {
       const nextPosition = new Vector2(nextX, nextY);
       const result = getTile(nextPosition, world);
 
-      if (!!result.currentChunk) {
+      if (
+        !!result.currentTile &&
+        result.currentTile.id > 0 &&
+        result.currentTile.id < 3
+      ) {
         this.position = nextPosition;
       } else {
         // no chunk there
@@ -204,10 +215,11 @@ export class Player extends GameObject {
       if (!!currentChunk) {
         currentChunk.children.forEach((tile) => {
           if (
-            Math.abs(position.x) >= tile.position.x &&
-            Math.abs(position.x) < tile.position.x + tile.width &&
-            Math.abs(position.y) >= tile.position.y &&
-            Math.abs(position.y) < tile.position.y + tile.height
+            position.x >= tile.position.x + currentChunk.position.x &&
+            position.x <
+              tile.position.x + tile.width + currentChunk.position.x &&
+            position.y >= tile.position.y + currentChunk.position.y &&
+            position.y < tile.position.y + tile.height + currentChunk.position.y
           )
             currentTile = tile;
         });
@@ -222,7 +234,7 @@ export class Player extends GameObject {
     const posX = this.position.x;
     const posY = this.position.y;
 
-    ctx.fillText(`Player: ${posX}, ${posY}  `, posX, posY + 16);
+    // ctx.fillText(`Player: ${posX}, ${posY}  `, posX, posY + 16);
 
     // ctx.beginPath();
 

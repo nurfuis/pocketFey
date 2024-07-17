@@ -1,9 +1,6 @@
-const debug = false;
+const debug = true;
 
-const MAP_ID = 0;
-const FOREGROUND = 1;
-
-import { gameParams } from "./config/gameParams.js";
+import { foreground_id, gameParams } from "./config/constants.js";
 
 import { loadResources } from "./src/utils/loadResources.js";
 import { loadMap } from "./src/utils/loadMap.js";
@@ -14,8 +11,8 @@ import { GameLoop } from "./src/GameLoop.js";
 import { World } from "./src/World.js";
 import { Camera } from "./src/Camera.js";
 import { Input } from "./src/Input.js";
-import { Player } from "./src/Player.js";
 import { AutomatedInput } from "./src/utils/AutomatedInput.js";
+import { Player } from "./src/Player.js";
 
 const gameWrapper = createGameWrapper();
 
@@ -23,26 +20,26 @@ const gameCanvasMain = createGameCanvasMain();
 const gameCtx = gameCanvasMain.getContext("2d");
 
 const resources = await loadResources();
-const mapData = await loadMap(MAP_ID);
+const mapData = await loadMap();
 
 const main = new GameObject({ position: new Vector2(0, 0) });
-const world = new World();
 
-world.build(resources, mapData);
+main.world = new World();
+main.world.build(mapData);
+main.addChild(main.world);
 
-main.addChild(world);
+main.camera = new Camera(main.world.tileWidth);
+main.addChild(main.camera);
 
-const camera = new Camera(world);
-main.addChild(camera);
-
-const input = new Input(world, camera);
-main.input = input;
 main.automatedInput = new AutomatedInput();
+main.input = new Input(
+  main.world.tileWidth,
+  main.world.tileHeight,
+  main.camera
+);
 
-const player = new Player(resources);
-world.children[FOREGROUND].addChild(player);
-
-console.log(main);
+main.player = new Player(resources);
+main.world.children[foreground_id].addChild(main.player);
 
 const update = (delta) => {
   main.stepEntry(delta, main);
@@ -52,7 +49,7 @@ const draw = () => {
   gameCtx.clearRect(0, 0, gameCanvasMain.width, gameCanvasMain.height);
   gameCtx.save();
 
-  camera.follow(gameCtx, 0, 0);
+  main.camera.follow(gameCtx, 0, 0);
 
   main.draw(gameCtx, 0, 0);
 
@@ -62,6 +59,8 @@ const draw = () => {
 const gameLoop = new GameLoop(update, draw);
 gameLoop.name = "mainLoop";
 gameLoop.start();
+
+
 
 function createGameCanvasMain() {
   const gameCanvasMain = document.createElement("canvas");

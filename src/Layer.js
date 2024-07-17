@@ -7,7 +7,7 @@ export class Layer extends GameObject {
     this.tileSets = tileSets;
     this.tileWidth = tileWidth;
     this.tileHeight = tileHeight;
-    this.showGrid = true;
+    this.showGrid = false;
 
     this.name = layer["name"];
     this.id = layer["id"];
@@ -36,25 +36,24 @@ export class Layer extends GameObject {
     const posX = this.startX * this.tileWidth;
     const posY = this.startY * this.tileHeight;
 
-    ctx.beginPath();
-
-    ctx.rect(
-      posX,
-      posY,
-      this.width * this.tileWidth,
-      this.height * this.tileHeight
-    );
-
     if (this.showGrid && this.name == "background") {
+      ctx.beginPath();
+
+      ctx.rect(
+        posX,
+        posY,
+        this.width * this.tileWidth,
+        this.height * this.tileHeight
+      );
+
       ctx.strokeStyle = "red";
       ctx.lineWidth = 3;
 
       ctx.stroke();
+      ctx.closePath();
+
+      ctx.lineWidth = 1;
     }
-
-    ctx.closePath();
-
-    ctx.lineWidth = 1;
   }
 }
 

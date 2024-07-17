@@ -2,7 +2,7 @@ import { GameObject } from "./GameObject.js";
 import { events } from "./Events.js";
 import { Vector2 } from "./Vector2.js";
 
-import { gameParams } from "../config/gameParams.js";
+import { gameParams } from "../config/constants.js";
 const displayWidth = gameParams.width;
 const displayHeight = gameParams.height;
 
@@ -20,7 +20,7 @@ import {
 } from "./Input.js";
 
 export class Camera extends GameObject {
-  constructor(world) {
+  constructor(tileWidth) {
     super({});
     this.previousPosition = null;
     this.homePosition = new Vector2(0, 0);
@@ -33,7 +33,7 @@ export class Camera extends GameObject {
     this.shiftDistance = 64; // pixels
     this.shiftCounter = this.shiftDistance;
 
-    this.halfTile = world.tileWidth / 2;
+    this.halfTile = tileWidth / 2;
     this.halfWidth = -this.halfTile + displayWidth / 2;
     this.halfHeight = -this.halfTile + displayHeight / 2;
 

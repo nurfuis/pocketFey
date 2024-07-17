@@ -4,7 +4,7 @@ import { Tile } from "./Tile.js";
 export class Chunk extends GameObject {
   constructor(chunk, tileWidth, tileHeight, tilesets) {
     super({});
-    this.showGrid = true;
+    this.showGrid = false;
     this.data = chunk["data"];
 
     this.width = chunk["width"] * tileWidth;
