@@ -35,7 +35,7 @@ export class Player extends GameObject {
     });
     this.canPickUpItems = true;
     this.itemPickUpShell = null;
-    this.useAutoInput = true;
+    this.useAutoInput = false;
     this.showGrid = false;
 
     this.gcd = 0;
@@ -56,7 +56,7 @@ export class Player extends GameObject {
     this.motor.KV = 10;
 
     this.transmission = new Transmission();
-    this.transmission.gear = 1;
+    this.transmission.gear = 3;
 
     this._maxSpeed = this.powerSupply.dischargeRate;
 
