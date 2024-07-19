@@ -50,15 +50,19 @@ export class Player extends GameObject {
     this.facingDirection = DOWN;
 
     this.powerSupply = new Battery();
+    this.powerSupply.storedEnergy = this.powerSupply.storedCapacity;
+
     this.motor = new Motor();
+    this.motor.KV = 10;
+
     this.transmission = new Transmission();
-    this.transmission.gear = 1;
+    this.transmission.gear = 3;
 
     this._maxSpeed = this.powerSupply.dischargeRate;
 
     this._mass = this.radius * this.scale ** 2;
 
-    this._gravity = this.scale ** 4;
+    this._gravity = this.scale ** 2;
     this._drag = this.scale ** 2 / this._mass;
 
     this._acceleration = new Vector2(0, 0);
@@ -104,6 +108,10 @@ export class Player extends GameObject {
       this.onPickUpItem(data);
     });
   }
+  get mass() {
+    return this._mass + this?.inventory?.items?.length * this.scale ** 2;
+  }
+
   move(direction, world) {
     if (direction && direction != this._lastDirection) {
       this._velocity = new Vector2(0, 0);
@@ -115,7 +123,7 @@ export class Player extends GameObject {
         (this.motor.KV *
           this.powerSupply.voltage *
           this.transmission.gearBox[this.transmission.gear].motor) /
-        (this._mass * this.transmission.gearBox[this.transmission.gear].drive);
+        (this.mass * this.transmission.gearBox[this.transmission.gear].drive);
 
       switch (direction) {
         case "LEFT":
@@ -173,11 +181,11 @@ export class Player extends GameObject {
 
     const sag = this.powerSupply.dropoff[this.powerSupply.storedCharge];
 
-    const forceX = this._acceleration.x * this._mass * sag;
-    const forceY = this._acceleration.y * this._mass * sag;
+    const forceX = this._acceleration.x * this.mass * sag;
+    const forceY = this._acceleration.y * this.mass * sag;
 
-    const vX = forceX / this._mass;
-    const vY = forceY / this._mass;
+    const vX = forceX / this.mass;
+    const vY = forceY / this.mass;
 
     if (vX < 0 || vX > 0) {
       this._velocity.x = vX * 1 - this._gravity;

@@ -37,14 +37,9 @@ export class World extends GameObject {
     // }
   }
 
-  build(mapData) {
+  async build(mapData) {
     for (const tileSet of mapData["tilesets"]) {
-      const img = new Image();
-      img.src = tileSet["image"];
-
-      const a = { image: img, width: null, height: null, isLoaded: true };
-      a.width = tileSet["imagewidth"];
-      a.height = tileSet["imageheight"];
+      const a = await loadTilesets(tileSet);
 
       this.tilesets.push({
         firstgid: tileSet["firstgid"],
@@ -64,5 +59,16 @@ export class World extends GameObject {
       );
       this.addChild(newLayer);
     }
+
+    async function loadTilesets(tileSet) {
+      const img = new Image();
+      img.src = tileSet["image"];
+
+      const a = { image: img, width: null, height: null, isLoaded: true };
+      a.width = tileSet["imagewidth"];
+      a.height = tileSet["imageheight"];
+      return a;
+    }
+    return true;
   }
 }

@@ -22,9 +22,11 @@ const mapData = await loadMap();
 
 const main = new GameObject({ position: new Vector2(0, 0) });
 
-main.world = new World();
-main.world.build(mapData);
-main.addChild(main.world);
+const world = new World();
+const worldReady = await world.build(mapData);
+
+main.world = world;
+main.addChild(world);
 
 main.camera = new Camera(main.world.tileWidth);
 main.addChild(main.camera);
@@ -36,7 +38,7 @@ main.input = new Input(
   main.camera
 );
 
-export const player = new Player();
+const player = new Player();
 main.player = player;
 main.world.children[foreground_id].addChild(main.player);
 
