@@ -3,7 +3,7 @@ const debug = true;
 import { foreground_id, gameParams } from "./config/constants.js";
 
 import { loadMap } from "./src/utils/loadMap.js";
-
+import { resources } from "./src/utils/loadResources.js";
 import { Vector2 } from "./src/Vector2.js";
 import { GameObject } from "./src/GameObject.js";
 import { GameLoop } from "./src/GameLoop.js";
@@ -38,7 +38,7 @@ main.input = new Input(
   main.camera
 );
 
-const player = new Player();
+export const player = new Player();
 main.player = player;
 main.world.children[foreground_id].addChild(main.player);
 

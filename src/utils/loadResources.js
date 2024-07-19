@@ -3,6 +3,7 @@ const debug = false;
 function loadResources() {
   let images = {};
   let imageList = {
+    energy: "/assets/sprites/energy.png",
     keg: "/assets/sprites/woodenKeg.png",
     grainBag: "/assets/sprites/grainBag.png",
     air: "/assets/sprites/air.png",
