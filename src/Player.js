@@ -1,3 +1,7 @@
+import { Battery } from "./Battery.js";
+import { Motor } from "./Motor.js";
+import { Transmission } from "./Transmission.js";
+
 import { Vector2 } from "./Vector2.js";
 import { Sprite } from "./Sprite.js";
 import { Animations } from "./Animations.js";
@@ -22,20 +26,39 @@ import { events } from "./Events.js";
 
 import { GameObject } from "./GameObject.js";
 import { globalCooldownDuration } from "../config/constants.js";
+import { resources } from "./utils/loadResources.js";
 
 export class Player extends GameObject {
-  constructor(resources) {
+  constructor() {
     super({
       position: new Vector2(48, 48),
     });
+    this.scale = 10;
+    this.radius = 16;
+
+    this.powerSupply = new Battery();
+    this.motor = new Motor();
+    this.transmission = new Transmission();
+    this.transmission.gear = 3;
+
+    this._maxSpeed = this.powerSupply.dischargeRate;
+    this._mass = this.radius * this.scale ** 2;
+
+    this._gravity = this.scale ** 2 / this._mass;
+    this._drag = this.scale ** 2 / this._mass;
+
+    this._acceleration = new Vector2(0, 0);
+    this._velocity = new Vector2(0, 0);
+
+    this.canPickUpItems = true;
+    this.itemPickUpShell = null;
     this.useAutoInput = false;
     this.showGrid = false;
+
     this.gcd = 0;
-    this.shape = "circle";
 
     this.width = 32;
     this.height = 64;
-    this.radius = 16;
 
     // speed
     this.speed = 2;
@@ -84,93 +107,104 @@ export class Player extends GameObject {
       this.onPickUpItem(data);
     });
   }
-
-  tryEmitPosition() {
-    if (this.lastX == this.position.x && this.lastY == this.position.y) {
-      return;
-    }
-    this.lastX = this.position.x;
-    this.lastY = this.position.y;
-
-    events.emit("PLAYER_POSITION", {
-      x: this.position.x,
-      y: this.position.y,
-      cause: "movement",
-    });
-  }
-
-  step(delta, root) {
-    // Get the chunk and tile for a givien position
-    const layer = this.parent;
-    const world = layer.parent;
-
-    if (this.itemPickUpTime > 0) {
-      this.workOnItemPickUp(delta);
-    }
-
-    const { input } = root;
-    const { automatedInput } = root;
-
-    if (this.useAutoInput) {
-      this.direction = input.direction || automatedInput.direction;
+  move(direction, world) {
+    if (direction) {
+      const torque =
+        (this.motor.KV *
+          this.powerSupply.voltage *
+          this.transmission.gearBox[this.transmission.gear].motor) /
+        (this._mass * this.transmission.gearBox[this.transmission.gear].drive);
+      console.log("Torque: ", torque);
+      console.log(
+        this.motor.KV,
+        this.powerSupply.voltage,
+        this.transmission.gearBox,
+        this.transmission.gear,
+        this._mass
+      );
+      switch (direction) {
+        case "LEFT":
+          if (Math.abs(this._acceleration.x) < this._maxSpeed) {
+            this._acceleration.x -= torque;
+            this.body.animations.play("walkLeft");
+          }
+          break;
+        case "RIGHT":
+          if (Math.abs(this._acceleration.x) < this._maxSpeed) {
+            this._acceleration.x += torque;
+            this.body.animations.play("walkRight");
+          }
+          break;
+        case "UP":
+          if (Math.abs(this._acceleration.y) < this._maxSpeed) {
+            this._acceleration.y -= torque;
+            this.body.animations.play("walkUp");
+          }
+          break;
+        case "DOWN":
+          if (Math.abs(this._acceleration.y) < this._maxSpeed) {
+            this._acceleration.y += torque;
+            this.body.animations.play("walkDown");
+          }
+          break;
+      }
     } else {
-      this.direction = input.direction;
-    }
+      // Reset acceleration to 0 on key release (no input)
+      const aX = this._acceleration.x;
+      const aY = this._acceleration.y;
 
-    this.keyPress = input.heldKeys;
-
-    if (this.gcd > 0) {
-      this.gcd -= delta;
-    }
-
-    if (this.keyPress.length > 0 && this.gcd <= 0) {
-      this.gcd += globalCooldownDuration;
-
-      console.log(getTile(this.position, world).currentTile.id || undefined);
-    }
-
-    if (!!this.direction) {
-      this.facingDirection = this.direction;
-      let nextX = this.position.x;
-      let nextY = this.position.y;
-
-      switch (this.direction) {
-        case LEFT:
-          nextX -= this.speed;
-          this.body.animations.play("walkLeft");
-          break;
-
-        case RIGHT:
-          nextX += this.speed;
-          this.body.animations.play("walkRight");
-          break;
-
-        case UP:
-          nextY -= this.speed;
-          this.body.animations.play("walkUp");
-          break;
-
-        case DOWN:
-          nextY += this.speed;
-          this.body.animations.play("walkDown");
-          break;
-
-        default:
-          break;
+      if (aX < 0) {
+        this._acceleration.x = aX + this._drag;
+      } else if (aX > 0) {
+        this._acceleration.x = aX - this._drag;
       }
 
-      const nextPosition = new Vector2(nextX, nextY);
-      const result = getTile(nextPosition, world);
-
-      if (
-        !!result.currentTile &&
-        result.currentTile.id > 0 &&
-        result.currentTile.id < 3
-      ) {
-        this.position = nextPosition;
-      } else {
-        // no chunk there
+      if ((aX < 0.2 && aX > 0) || (aX > -0.2 && aX < 0)) {
+        this._acceleration.x = 0;
       }
+
+      if (aY < 0) {
+        this._acceleration.y = aY + this._drag;
+      } else if (aY > 0) {
+        this._acceleration.y = aY - this._drag;
+      }
+
+      if ((aY < 0.2 && aY > 0) || (aY > -0.2 && aY < 0)) {
+        this._acceleration.y = 0;
+      }
+    }
+    const sag = this.powerSupply.dropoff[this.powerSupply.storedCharge];
+
+    const forceX = this._acceleration.x * this._mass * sag;
+    const forceY = this._acceleration.y * this._mass * sag;
+
+    const vX = forceX / this._mass;
+    const vY = forceY / this._mass;
+
+    if (vX < 0 || vX > 0) {
+      this._velocity.x = vX * 1 - this._gravity;
+    } else if ((vX < 1 && vX > 0) || (vX > -1 && vX < 0)) {
+      this._velocity.x = 0;
+    }
+
+    if (vY < 0 || vY > 0) {
+      this._velocity.y = vY * 1 - this._gravity;
+    } else if ((vY < 1 && vY > 0) || (vY > -1 && vY < 0)) {
+      this._velocity.y = 0;
+    }
+
+    let nextX = this.position.x + vX;
+    let nextY = this.position.y + vY;
+
+    const nextPosition = new Vector2(nextX, nextY);
+    const result = getTile(nextPosition, world);
+
+    if (
+      !!result.currentTile &&
+      result.currentTile.id > 0 &&
+      result.currentTile.id < 3
+    ) {
+      this.position = nextPosition;
     } else {
       switch (this.facingDirection) {
         case LEFT:
@@ -193,41 +227,93 @@ export class Player extends GameObject {
           break;
       }
     }
+  }
+
+  onPickUpItem(item) {
+    console.log(this.inventory.items.length);
+    if (this.inventory.items.length > 10) {
+      this.canPickUpItems = false;
+    } else if (
+      this.inventory.items.length <= 10 &&
+      this.inventory.items.lengt >= 0
+    ) {
+      this.canPickUpItems = true;
+    }
+    if (this.itemPickUpShell === null) {
+      this.itemPickUpTime = 80;
+      this.itemPickUpShell = new GameObject({ x: 0, y: 0 });
+      const sprite = new Sprite({
+        resource: item.image,
+        frameSize: new Vector2(32, 32),
+        position: new Vector2(-12, -52),
+        scale: 0.75,
+      });
+      this.itemPickUpShell.addChild(sprite);
+      this.addChild(this.itemPickUpShell);
+    }
+  }
+
+  workOnItemPickUp(delta) {
+    this.itemPickUpTime -= delta;
+    this.body.animations.play("pickUpDown");
+    if (this.itemPickUpTime <= 0) {
+      this.itemPickUpShell.destroy();
+      this.itemPickUpShell = null;
+    }
+  }
+
+  tryEmitPosition() {
+    if (this.lastX == this.position.x && this.lastY == this.position.y) {
+      return;
+    }
+    this.lastX = this.position.x;
+    this.lastY = this.position.y;
+
+    events.emit("PLAYER_POSITION", {
+      x: this.position.x,
+      y: this.position.y,
+      cause: "movement",
+      radius: this.radius,
+      canPickUpItems: this.canPickUpItems,
+    });
+  }
+
+  step(delta, root) {
+    const layer = this.parent;
+    const world = layer.parent;
+
+    this.powerSupply.checkState();
+    this.powerSupply.drawPower(this._acceleration);
+
+    // Get the chunk and tile for a givien position
+
+    if (this.itemPickUpTime > 0) {
+      this.workOnItemPickUp(delta);
+      return;
+    }
+
+    const { input } = root;
+    const { automatedInput } = root;
+
+    if (this.useAutoInput) {
+      this.direction = input.direction || automatedInput.direction;
+    } else {
+      this.direction = input.direction;
+    }
+
+    this.move(this.direction, world);
+
+    this.keyPress = input.heldKeys;
+    if (this.gcd > 0) {
+      this.gcd -= delta;
+    }
+    if (this.keyPress.length > 0 && this.gcd <= 0) {
+      this.gcd += globalCooldownDuration;
+
+      console.log(getTile(this.position, world).currentTile.id || undefined);
+    }
 
     this.tryEmitPosition();
-
-    function getTile(position, world) {
-      const background = world.children[0];
-      let currentChunk;
-      let currentTile;
-      if (background.children.length > 0) {
-        background.children.forEach((chunk) => {
-          if (
-            position.x >= chunk.position.x &&
-            position.x < chunk.position.x + chunk.width &&
-            position.y >= chunk.position.y &&
-            position.y < chunk.position.y + chunk.height
-          )
-            currentChunk = chunk;
-        });
-      }
-
-      if (!!currentChunk) {
-        currentChunk.children.forEach((tile) => {
-          if (
-            position.x >= tile.position.x + currentChunk.position.x &&
-            position.x <
-              tile.position.x + tile.width + currentChunk.position.x &&
-            position.y >= tile.position.y + currentChunk.position.y &&
-            position.y < tile.position.y + tile.height + currentChunk.position.y
-          )
-            currentTile = tile;
-        });
-      } else {
-        currentTile = undefined;
-      }
-      return { currentChunk, currentTile };
-    }
   }
 
   drawImage(ctx) {
@@ -250,4 +336,35 @@ export class Player extends GameObject {
 
     // ctx.lineWidth = 1;
   }
+}
+function getTile(position, world) {
+  const background = world.children[0]; // layer id 0
+  let currentChunk;
+  let currentTile;
+  if (background.children.length > 0) {
+    background.children.forEach((chunk) => {
+      if (
+        position.x >= chunk.position.x &&
+        position.x < chunk.position.x + chunk.width &&
+        position.y >= chunk.position.y &&
+        position.y < chunk.position.y + chunk.height
+      )
+        currentChunk = chunk;
+    });
+  }
+
+  if (!!currentChunk) {
+    currentChunk.children.forEach((tile) => {
+      if (
+        position.x >= tile.position.x + currentChunk.position.x &&
+        position.x < tile.position.x + tile.width + currentChunk.position.x &&
+        position.y >= tile.position.y + currentChunk.position.y &&
+        position.y < tile.position.y + tile.height + currentChunk.position.y
+      )
+        currentTile = tile;
+    });
+  } else {
+    currentTile = undefined;
+  }
+  return { currentChunk, currentTile };
 }

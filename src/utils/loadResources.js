@@ -1,8 +1,10 @@
 const debug = false;
 
-export async function loadResources() {
+function loadResources() {
   let images = {};
   let imageList = {
+    keg: "/assets/sprites/woodenKeg.png",
+    grainBag: "/assets/sprites/grainBag.png",
     air: "/assets/sprites/air.png",
     tileSet: "/assets/sprites/base.png",
     player: "/assets/sprites/player.png",
@@ -32,3 +34,4 @@ export async function loadResources() {
   });
   return { images: images, sounds: null };
 }
+export const resources = new loadResources();
