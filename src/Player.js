@@ -33,23 +33,6 @@ export class Player extends GameObject {
     super({
       position: new Vector2(48, 48),
     });
-    this.scale = 10;
-    this.radius = 16;
-
-    this.powerSupply = new Battery();
-    this.motor = new Motor();
-    this.transmission = new Transmission();
-    this.transmission.gear = 3;
-
-    this._maxSpeed = this.powerSupply.dischargeRate;
-    this._mass = this.radius * this.scale ** 2;
-
-    this._gravity = this.scale ** 2 / this._mass;
-    this._drag = this.scale ** 2 / this._mass;
-
-    this._acceleration = new Vector2(0, 0);
-    this._velocity = new Vector2(0, 0);
-
     this.canPickUpItems = true;
     this.itemPickUpShell = null;
     this.useAutoInput = false;
@@ -60,13 +43,27 @@ export class Player extends GameObject {
     this.width = 32;
     this.height = 64;
 
-    // speed
-    this.speed = 2;
+    this.scale = 12;
+    this.radius = 16;
 
-    // direction
+    this.speed = 2;
     this.facingDirection = DOWN;
 
-    // sprites
+    this.powerSupply = new Battery();
+    this.motor = new Motor();
+    this.transmission = new Transmission();
+    this.transmission.gear = 1;
+
+    this._maxSpeed = this.powerSupply.dischargeRate;
+
+    this._mass = this.radius * this.scale ** 2;
+
+    this._gravity = this.scale ** 4;
+    this._drag = this.scale ** 2 / this._mass;
+
+    this._acceleration = new Vector2(0, 0);
+    this._velocity = new Vector2(0, 0);
+
     this.shadow = new Sprite({
       resource: resources.images.shadow,
       frameSize: new Vector2(32, 32),
@@ -108,20 +105,18 @@ export class Player extends GameObject {
     });
   }
   move(direction, world) {
+    if (direction && direction != this._lastDirection) {
+      this._velocity = new Vector2(0, 0);
+      this._acceleration = new Vector2(0, 0);
+      return;
+    }
     if (direction) {
       const torque =
         (this.motor.KV *
           this.powerSupply.voltage *
           this.transmission.gearBox[this.transmission.gear].motor) /
         (this._mass * this.transmission.gearBox[this.transmission.gear].drive);
-      console.log("Torque: ", torque);
-      console.log(
-        this.motor.KV,
-        this.powerSupply.voltage,
-        this.transmission.gearBox,
-        this.transmission.gear,
-        this._mass
-      );
+
       switch (direction) {
         case "LEFT":
           if (Math.abs(this._acceleration.x) < this._maxSpeed) {
@@ -153,26 +148,29 @@ export class Player extends GameObject {
       const aX = this._acceleration.x;
       const aY = this._acceleration.y;
 
+      // x friction
       if (aX < 0) {
         this._acceleration.x = aX + this._drag;
       } else if (aX > 0) {
         this._acceleration.x = aX - this._drag;
       }
 
-      if ((aX < 0.2 && aX > 0) || (aX > -0.2 && aX < 0)) {
+      if ((aX < 4 && aX > 0) || (aX > -4 && aX < 0)) {
         this._acceleration.x = 0;
       }
 
+      // y friction
       if (aY < 0) {
         this._acceleration.y = aY + this._drag;
       } else if (aY > 0) {
         this._acceleration.y = aY - this._drag;
       }
 
-      if ((aY < 0.2 && aY > 0) || (aY > -0.2 && aY < 0)) {
+      if ((aY < 4 && aY > 0) || (aY > -4 && aY < 0)) {
         this._acceleration.y = 0;
       }
     }
+
     const sag = this.powerSupply.dropoff[this.powerSupply.storedCharge];
 
     const forceX = this._acceleration.x * this._mass * sag;
@@ -183,18 +181,28 @@ export class Player extends GameObject {
 
     if (vX < 0 || vX > 0) {
       this._velocity.x = vX * 1 - this._gravity;
-    } else if ((vX < 1 && vX > 0) || (vX > -1 && vX < 0)) {
+    } else if ((vX < 4 && vX > 0) || (vX > -4 && vX < 0)) {
       this._velocity.x = 0;
     }
 
     if (vY < 0 || vY > 0) {
       this._velocity.y = vY * 1 - this._gravity;
-    } else if ((vY < 1 && vY > 0) || (vY > -1 && vY < 0)) {
+    } else if ((vY < 4 && vY > 0) || (vY > -4 && vY < 0)) {
       this._velocity.y = 0;
     }
+    let nextX;
+    let nextY;
 
-    let nextX = this.position.x + vX;
-    let nextY = this.position.y + vY;
+    if (this.direction == LEFT || this.direction == RIGHT) {
+      nextX = this.position.x + vX;
+      nextY = this.position.y;
+      this._velocity.y = 0;
+    }
+    if (this.direction == UP || this.direction == DOWN) {
+      nextX = this.position.x;
+      nextY = this.position.y + vY;
+      this._velocity.x = 0;
+    }
 
     const nextPosition = new Vector2(nextX, nextY);
     const result = getTile(nextPosition, world);
@@ -206,6 +214,8 @@ export class Player extends GameObject {
     ) {
       this.position = nextPosition;
     } else {
+      this._velocity = new Vector2(0, 0);
+      this._acceleration = new Vector2(0, 0);
       switch (this.facingDirection) {
         case LEFT:
           this.body.animations.play("standLeft");
@@ -285,12 +295,11 @@ export class Player extends GameObject {
     this.powerSupply.checkState();
     this.powerSupply.drawPower(this._acceleration);
 
-    // Get the chunk and tile for a givien position
-
     if (this.itemPickUpTime > 0) {
       this.workOnItemPickUp(delta);
       return;
     }
+    this._lastDirection = this.direction;
 
     const { input } = root;
     const { automatedInput } = root;
