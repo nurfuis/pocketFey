@@ -70,26 +70,76 @@ export class Input {
     // debugger
     this.keyCode = undefined;
 
-    const canvas = document.getElementById("gameCanvas");
+    const centerX = this.windowWidth / 2;
+    const centerY = this.windowHeight / 2;
+    const radiusX = centerX / 2;
+    const radiusY = centerY / 2;
+    const wedgeAngle = Math.PI / 2;
+    const upAngle = Math.PI * 1.5;
+    const rightAngle = 0;
+    const downAngle = Math.PI * 0.5;
+    const leftAngle = Math.PI;
 
     document.addEventListener("touchstart", (event) => {
       const touchX = event.touches[0].clientX;
       const touchY = event.touches[0].clientY;
 
-      if (touchY < this.windowHeight / 3) this.onArrowPressed(UP);
-      if (touchY > (this.windowHeight * 2) / 3) this.onArrowPressed(DOWN);
+      let angle = Math.atan2(touchY - centerY, touchX - centerX);
+
+      // Normalize the angle to the range of 0 to 2*PI
+      angle = normalizeAngle(angle);
+
+      // Define wedge angle range with some tolerance
+      const wedgeAngle = Math.PI / 4; // Adjust for desired wedge size
+      const tolerance = wedgeAngle / 3; // Adjust tolerance for precise detection
+
+      // Identify direction based on angle and wedge ranges
       if (
-        touchX < this.windowWidth / 2 &&
-        touchY > this.windowHeight / 3 &&
-        touchY < (this.windowHeight * 2) / 3
-      )
-        this.onArrowPressed(LEFT);
-      if (
-        touchX > this.windowWidth / 2 &&
-        touchY > this.windowHeight / 3 &&
-        touchY < (this.windowHeight * 2) / 3
-      )
+        angle > upAngle - wedgeAngle - tolerance &&
+        angle < upAngle + wedgeAngle + tolerance
+      ) {
+        this.onArrowPressed(UP);
+        console.log("Up");
+      } else if (
+        angle > rightAngle - wedgeAngle - tolerance &&
+        angle < rightAngle + wedgeAngle + tolerance
+      ) {
         this.onArrowPressed(RIGHT);
+        console.log("Right");
+      } else if (
+        angle > downAngle - wedgeAngle - tolerance &&
+        angle < downAngle + wedgeAngle + tolerance
+      ) {
+        this.onArrowPressed(DOWN);
+        console.log("Down");
+      } else if (
+        angle > leftAngle - wedgeAngle - tolerance &&
+        angle < leftAngle + wedgeAngle + tolerance
+      ) {
+        this.onArrowPressed(LEFT);
+        console.log("Left");
+      }
+
+      // Helper function to normalize angle between 0 and 2*PI
+      function normalizeAngle(angle) {
+        angle = angle + Math.PI * 2; // Ensure positive angle
+        angle %= Math.PI * 2; // Wrap around to 0-2PI range
+        return angle;
+      }
+      // if (touchY < this.windowHeight / 3) this.onArrowPressed(UP);
+      // if (touchY > (this.windowHeight * 2) / 3) this.onArrowPressed(DOWN);
+      // if (
+      //   touchX < this.windowWidth / 2 &&
+      //   touchY > this.windowHeight / 3 &&
+      //   touchY < (this.windowHeight * 2) / 3
+      // )
+      //   this.onArrowPressed(LEFT);
+      // if (
+      //   touchX > this.windowWidth / 2 &&
+      //   touchY > this.windowHeight / 3 &&
+      //   touchY < (this.windowHeight * 2) / 3
+      // )
+      //   this.onArrowPressed(RIGHT);
     });
 
     document.addEventListener("touchend", (event) => {
