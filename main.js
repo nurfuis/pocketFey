@@ -18,38 +18,51 @@ events.on("RESOURCES_LOADED", this, () => {
   console.log("Resources are Loaded");
 });
 import { resources } from "./src/utils/loadResources.js";
-createStartButton();
 
-const gameWrapper = createGameWrapper();
-const gameCanvasMain = createGameCanvasMain();
-const gameCtx = gameCanvasMain.getContext("2d");
-
-const mapData = await loadMap();
-
-const main = new GameObject({ position: new Vector2(0, 0) });
-
-const world = new World();
-const worldReady = await world.build(mapData);
-
-main.world = world;
-main.addChild(world);
-
-main.camera = new Camera(main.world.tileWidth);
-main.addChild(main.camera);
-
-main.automatedInput = new AutomatedInput();
-main.input = new Input(
-  main.world.tileWidth,
-  main.world.tileHeight,
-  main.camera
-);
+let gameWrapper;
+let gameCanvasMain;
+let gameCtx;
+let mapData;
+let main;
+let world;
 
 export const player = new Player();
-main.player = player;
-main.world.children[foreground_id].addChild(main.player);
-
 const inventory = new Inventory();
-player.inventory = inventory;
+
+async function launch() {
+  gameWrapper = createGameWrapper();
+  gameCanvasMain = createGameCanvasMain();
+  gameCtx = gameCanvasMain.getContext("2d");
+
+  mapData = await loadMap();
+
+  main = new GameObject({ position: new Vector2(0, 0) });
+  world = new World();
+  const worldReady = await world.build(mapData);
+
+  main.world = world;
+  main.addChild(world);
+
+  main.camera = new Camera(main.world.tileWidth);
+  main.addChild(main.camera);
+
+  main.automatedInput = new AutomatedInput();
+  main.input = new Input(
+    main.world.tileWidth,
+    main.world.tileHeight,
+    main.camera
+  );
+
+  main.player = player;
+  main.world.children[foreground_id].addChild(main.player);
+  player.inventory = inventory;
+
+  gameLoop.start();
+}
+
+window.onload = function () {
+  createStartButton();
+};
 
 const update = (delta) => {
   main.stepEntry(delta, main);
@@ -114,7 +127,7 @@ function createStartButton() {
   startButton.textContent = "Start";
 
   startButton.addEventListener("click", () => {
-    gameLoop.start();
+    launch();
     startContainer.style.display = "none";
     console.log("Start!");
   });
