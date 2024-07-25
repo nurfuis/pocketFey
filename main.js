@@ -18,12 +18,11 @@ events.on("RESOURCES_LOADED", this, () => {
   console.log("Resources are Loaded");
 });
 import { resources } from "./src/utils/loadResources.js";
+createStartButton();
 
 const gameWrapper = createGameWrapper();
 const gameCanvasMain = createGameCanvasMain();
 const gameCtx = gameCanvasMain.getContext("2d");
-
-createStartButton();
 
 const mapData = await loadMap();
 
