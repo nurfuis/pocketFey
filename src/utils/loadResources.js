@@ -1,38 +1,52 @@
-const debug = false;
+const debug = true;
 
-function loadResources() {
-  let images = {};
-  let imageList = {
-    energy: "/assets/sprites/energy.png",
-    keg: "/assets/sprites/woodenKeg.png",
-    grainBag: "/assets/sprites/grainBag.png",
-    air: "/assets/sprites/air.png",
-    tileSet: "/assets/sprites/base.png",
-    player: "/assets/sprites/player.png",
-    shadow: "/assets/sprites/shadow.png",
-  };
+import { events } from "../Events.js";
 
-  Object.keys(imageList).forEach((key) => {
-    const img = new Image();
-    img.src = imageList[key];
+class ResourceLoader {
+  static instance;
 
-    if (debug) {
-      console.log("Loading image:", imageList[key]);
+  constructor() {
+    if (ResourceLoader.instance) {
+      return ResourceLoader.instance;
     }
+    this.images = {};
 
-    images[key] = {
-      image: img,
-      isLoaded: false,
-      width: null,
-      height: null,
+    this.imageList = {
+      energy: "/assets/sprites/energy.png",
+      keg: "/assets/sprites/woodenKeg.png",
+      grainBag: "/assets/sprites/grainBag.png",
+      air: "/assets/sprites/air.png",
+      tileSet: "/assets/sprites/base.png",
+      player: "/assets/sprites/player.png",
+      shadow: "/assets/sprites/shadow.png",
     };
 
-    img.onload = () => {
-      images[key].isLoaded = true;
-      if (Object.values(images).every((image) => image.isLoaded)) {
+    Object.keys(this.imageList).forEach((key) => {
+      const img = new Image();
+      img.src = this.imageList[key];
+
+      if (debug) {
+        console.log("Loading image:", this.imageList[key]);
       }
-    };
-  });
-  return { images: images, sounds: null };
+
+      this.images[key] = {
+        image: img,
+        isLoaded: false,
+        width: null,
+        height: null,
+      };
+
+      img.onload = () => {
+        this.images[key].isLoaded = true;
+        if (Object.values(this.images).every((image) => image.isLoaded)) {
+          console.log("Loading Images Complete!");
+          events.emit("RESOURCES_LOADED");
+        }
+      };
+    });
+    ResourceLoader.instance = this;
+
+    return { images: this.images, sounds: null };
+  }
 }
-export const resources = new loadResources();
+export const resources = new ResourceLoader();

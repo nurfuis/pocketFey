@@ -2,7 +2,7 @@ const debug = true;
 
 import { foreground_id, gameParams } from "./config/constants.js";
 
-import { resources } from "./src/utils/loadResources.js";
+import { events } from "./src/Events.js";
 import { loadMap } from "./src/utils/loadMap.js";
 import { Vector2 } from "./src/Vector2.js";
 import { GameObject } from "./src/GameObject.js";
@@ -13,6 +13,12 @@ import { Input } from "./src/Input.js";
 import { AutomatedInput } from "./src/utils/AutomatedInput.js";
 import { Player } from "./src/Player.js";
 import { Inventory } from "./src/Inventory.js";
+
+events.on("RESOURCES_LOADED", this, () => {
+  console.log("Resources are Loaded");
+});
+import { resources } from "./src/utils/loadResources.js";
+createStartButton();
 
 const gameWrapper = createGameWrapper();
 const gameCanvasMain = createGameCanvasMain();
@@ -64,7 +70,7 @@ const draw = () => {
 
 const gameLoop = new GameLoop(update, draw);
 gameLoop.name = "mainLoop";
-gameLoop.start();
+// gameLoop.start();
 
 function createGameCanvasMain() {
   const gameCanvasMain = document.createElement("canvas");
@@ -95,6 +101,29 @@ function createGameWrapper() {
   return gameWrapper;
 }
 
+function createStartButton() {
+  const body = document.getElementsByTagName("body");
+
+  const startContainer = document.createElement("div");
+  startContainer.classList.add("container");
+
+  const startChild = document.createElement("div");
+  startContainer.appendChild(startChild);
+
+  const startButton = document.createElement("button");
+  startButton.textContent = "Start";
+
+  startButton.addEventListener("click", () => {
+    gameLoop.start();
+    startContainer.style.display = "none";
+    console.log("Start!");
+  });
+
+  startChild.appendChild(startButton);
+
+  body[0].appendChild(startContainer);
+  return startContainer;
+}
 if (debug) {
   console.log(main);
 }
