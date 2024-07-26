@@ -35,7 +35,7 @@ export class Player extends GameObject {
     super({
       position: new Vector2(48, 48),
     });
-    this.inventorySize = 1;
+    this.inventorySize = 8;
     this.canPickUpItems = true;
     this.itemPickUpShell = null;
     this.useAutoInput = false;
