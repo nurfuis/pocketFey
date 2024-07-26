@@ -128,7 +128,7 @@ function createStartButton() {
 }
 async function launch() {
   if (!resourcesLoaded) {
-    console.log("Resources are not yet loaded");
+    console.warn("Resources are not loaded");
     return;
   }
 
