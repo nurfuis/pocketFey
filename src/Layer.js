@@ -3,7 +3,6 @@ import { Chunk } from "./Chunk.js";
 import { events } from "./Events.js";
 import { Vector2 } from "./Vector2.js";
 import { Tile } from "./Tile.js";
-import { entities } from "../main.js";
 
 export class Layer extends GameObject {
   constructor(layer, tileWidth, tileHeight, tileSets) {
@@ -38,9 +37,9 @@ export class Layer extends GameObject {
         const newPosition = new Vector2(object.x, object.y);
         switch (object.type) {
           case "Entity":
-            events.emit("SPAWN_NEW_ENTITY", {
-              position: newPosition,
-              type: object.gid,
+            events.emit("SPAWN", {
+              data: object,
+              tileSets: tileSets,
             });
             break;
 

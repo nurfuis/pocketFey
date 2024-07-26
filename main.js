@@ -13,6 +13,7 @@ import { Input } from "./src/Input.js";
 import { AutomatedInput } from "./src/utils/AutomatedInput.js";
 import { Player } from "./src/Player.js";
 import { Inventory } from "./src/Inventory.js";
+import { Spawner } from "./src/Spawner.js";
 
 let resourcesLoaded = false;
 let gameWrapper;
@@ -22,6 +23,8 @@ let mapData;
 let main;
 let world;
 
+const spawner = Spawner.getInstance();
+
 export const player = new Player();
 const inventory = new Inventory();
 
@@ -30,6 +33,10 @@ export let entities;
 const update = (delta) => {
   main.stepEntry(delta, main);
   sortChildren();
+
+  if (!!spawner.spawnQueue && spawner.spawnQueue.length > 0) {
+    spawner.update();
+  }
 };
 const draw = () => {
   gameCtx.clearRect(0, 0, gameCanvasMain.width, gameCanvasMain.height);
@@ -174,5 +181,6 @@ window.onload = function () {
 
 events.on("RESOURCES_LOADED", this, () => {
   resourcesLoaded = true;
+  launch();
   console.log("Resources are Loaded: ", resources);
 });

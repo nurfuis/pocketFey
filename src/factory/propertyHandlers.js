@@ -1,19 +1,8 @@
-import {
-  SHIELD,
-  MOVING,
-  IDLE,
-} from "../../../animations/patterns/slimeAnimations.js";
-import { FrameIndexPattern } from "../../../animations/FrameIndexPattern.js";
-import { Vector2 } from "../../../utils/Vector2.js";
-import { resources } from "../../../utils/Resource.js";
-import { Animations } from "../../../animations/Animations.js";
-import {
-  WOODEN_KETTLE_BOILING,
-  WOODEN_KETTLE_EMPTY,
-  WOODEN_MASH_TUN_EMPTY,
-  WOODEN_MASH_TUN_MASHING,
-} from "../../../animations/patterns/woodenAnimations.js";
-import { StateMachine } from "../../../controllers/StateMachine.js";
+import { FrameIndexPattern } from "../FrameIndexPattern.js";
+import { Vector2 } from "../Vector2.js";
+import { resources } from "../utils/loadResources.js";
+import { Animations } from "../Animations.js";
+import { StateMachine } from "../controllers/StateMachine.js";
 import {
   HOP_DOWN,
   HOP_LEFT,
@@ -23,7 +12,7 @@ import {
   IDLE_LEFT,
   IDLE_RIGHT,
   IDLE_UP,
-} from "../../../animations/patterns/blobAnimations.js";
+} from "../animations/blobAnimations.js";
 import {
   WALK_UP,
   WALK_DOWN,
@@ -33,9 +22,7 @@ import {
   STAND_UP,
   STAND_RIGHT,
   STAND_LEFT,
-} from "../../../animations/patterns/playerAnimations.js";
-
-// TODO add type safety errors for all data
+} from "../animations/playerAnimations.js";
 
 export const propertyHandlers = {
   // Property name: function to handle the logic
@@ -70,7 +57,7 @@ export const propertyHandlers = {
   },
   "stat.maxHealth": (newEntity, value) => {
     newEntity.maxHealth = value;
-  },         
+  },
   mien: (newEntity, value) => {
     newEntity.mien = value;
   },
@@ -80,7 +67,7 @@ export const propertyHandlers = {
   "shadow.offset.x": (newEntity, value) => {
     if (typeof value !== "number" || !Number.isInteger(value)) {
       throw new TypeError(
-        "shadow.offset.x must be an integer. Check custom properties of the template in Tiled.",
+        "shadow.offset.x must be an integer. Check custom properties of the template in Tiled."
       );
     }
     newEntity.shadow.position.x = value;
@@ -88,14 +75,14 @@ export const propertyHandlers = {
   "shadow.offset.y": (newEntity, value) => {
     if (typeof value !== "number" || !Number.isInteger(value)) {
       throw new TypeError(
-        "shadow.offset.y must be an integer. Check custom properties of the template in Tiled.",
+        "shadow.offset.y must be an integer. Check custom properties of the template in Tiled."
       );
     }
     newEntity.shadow.position.y = value;
-  }, 
+  },
   "shadow.scale": (newEntity, value) => {
     newEntity.shadow.scale = value;
-  },   
+  },
   "sprite.hFrames": (newEntity, value) => {
     newEntity.body.hFrames = value;
   },
@@ -128,7 +115,7 @@ export const propertyHandlers = {
   "sprite.offset.x": (newEntity, value) => {
     if (typeof value !== "number" || !Number.isInteger(value)) {
       throw new TypeError(
-        "sprite.offset.x must be an integer. Check custom properties of the template in Tiled.",
+        "sprite.offset.x must be an integer. Check custom properties of the template in Tiled."
       );
     }
     newEntity.body.position.x = value;
@@ -136,7 +123,7 @@ export const propertyHandlers = {
   "sprite.offset.y": (newEntity, value) => {
     if (typeof value !== "number" || !Number.isInteger(value)) {
       throw new TypeError(
-        "sprite.offset.y must be an integer. Check custom properties of the template in Tiled.",
+        "sprite.offset.y must be an integer. Check custom properties of the template in Tiled."
       );
     }
     newEntity.body.position.y = value;
@@ -154,7 +141,7 @@ export const propertyHandlers = {
     }
     newEntity.body.animations.addAnimation(
       "moving",
-      new FrameIndexPattern(MOVING),
+      new FrameIndexPattern(MOVING)
     );
   },
   "animations.shield": (newEntity) => {
@@ -163,7 +150,7 @@ export const propertyHandlers = {
     }
     newEntity.body.animations.addAnimation(
       "shield",
-      new FrameIndexPattern(SHIELD),
+      new FrameIndexPattern(SHIELD)
     );
   },
   "animations.woodenKettleBoiling": (newEntity) => {
@@ -172,7 +159,7 @@ export const propertyHandlers = {
     }
     newEntity.body.animations.addAnimation(
       "woodenKettleBoiling",
-      new FrameIndexPattern(WOODEN_KETTLE_BOILING),
+      new FrameIndexPattern(WOODEN_KETTLE_BOILING)
     );
   },
   "animations.woodenKettleEmpty": (newEntity) => {
@@ -181,7 +168,7 @@ export const propertyHandlers = {
     }
     newEntity.body.animations.addAnimation(
       "woodenKettleEmpty",
-      new FrameIndexPattern(WOODEN_KETTLE_EMPTY),
+      new FrameIndexPattern(WOODEN_KETTLE_EMPTY)
     );
   },
   "animations.woodenMashTunMashing": (newEntity) => {
@@ -190,7 +177,7 @@ export const propertyHandlers = {
     }
     newEntity.body.animations.addAnimation(
       "woodenMashTunMashing",
-      new FrameIndexPattern(WOODEN_MASH_TUN_MASHING),
+      new FrameIndexPattern(WOODEN_MASH_TUN_MASHING)
     );
   },
   "animations.woodenMashTunEmpty": (newEntity) => {
@@ -199,7 +186,7 @@ export const propertyHandlers = {
     }
     newEntity.body.animations.addAnimation(
       "woodenMashTunEmpty",
-      new FrameIndexPattern(WOODEN_MASH_TUN_EMPTY),
+      new FrameIndexPattern(WOODEN_MASH_TUN_EMPTY)
     );
   },
   animations: (newEntity, value) => {
@@ -211,73 +198,73 @@ export const propertyHandlers = {
     if (value === "blob") {
       newEntity.body.animations.addAnimation(
         "moveDown",
-        new FrameIndexPattern(HOP_DOWN),
+        new FrameIndexPattern(HOP_DOWN)
       );
       newEntity.body.animations.addAnimation(
         "moveUp",
-        new FrameIndexPattern(HOP_UP),
+        new FrameIndexPattern(HOP_UP)
       );
       newEntity.body.animations.addAnimation(
         "moveLeft",
-        new FrameIndexPattern(HOP_LEFT),
+        new FrameIndexPattern(HOP_LEFT)
       );
       newEntity.body.animations.addAnimation(
         "moveRight",
-        new FrameIndexPattern(HOP_RIGHT),
+        new FrameIndexPattern(HOP_RIGHT)
       );
 
       newEntity.body.animations.addAnimation(
         "idleDown",
-        new FrameIndexPattern(IDLE_DOWN),
+        new FrameIndexPattern(IDLE_DOWN)
       );
       newEntity.body.animations.addAnimation(
         "idleUp",
-        new FrameIndexPattern(IDLE_UP),
+        new FrameIndexPattern(IDLE_UP)
       );
       newEntity.body.animations.addAnimation(
         "idleLeft",
-        new FrameIndexPattern(IDLE_LEFT),
+        new FrameIndexPattern(IDLE_LEFT)
       );
       newEntity.body.animations.addAnimation(
         "idleRight",
-        new FrameIndexPattern(IDLE_RIGHT),
+        new FrameIndexPattern(IDLE_RIGHT)
       );
     }
 
     if (value === "humanoid") {
       newEntity.body.animations.addAnimation(
         "moveDown",
-        new FrameIndexPattern(WALK_DOWN),
+        new FrameIndexPattern(WALK_DOWN)
       );
       newEntity.body.animations.addAnimation(
         "moveUp",
-        new FrameIndexPattern(WALK_UP),
+        new FrameIndexPattern(WALK_UP)
       );
       newEntity.body.animations.addAnimation(
         "moveLeft",
-        new FrameIndexPattern(WALK_LEFT),
+        new FrameIndexPattern(WALK_LEFT)
       );
       newEntity.body.animations.addAnimation(
         "moveRight",
-        new FrameIndexPattern(WALK_RIGHT),
+        new FrameIndexPattern(WALK_RIGHT)
       );
 
       newEntity.body.animations.addAnimation(
         "idleDown",
-        new FrameIndexPattern(STAND_DOWN),
+        new FrameIndexPattern(STAND_DOWN)
       );
       newEntity.body.animations.addAnimation(
         "idleUp",
-        new FrameIndexPattern(STAND_UP),
+        new FrameIndexPattern(STAND_UP)
       );
       newEntity.body.animations.addAnimation(
         "idleLeft",
-        new FrameIndexPattern(STAND_LEFT),
+        new FrameIndexPattern(STAND_LEFT)
       );
       newEntity.body.animations.addAnimation(
         "idleRight",
-        new FrameIndexPattern(STAND_RIGHT),
-      );     
+        new FrameIndexPattern(STAND_RIGHT)
+      );
     }
   },
 };

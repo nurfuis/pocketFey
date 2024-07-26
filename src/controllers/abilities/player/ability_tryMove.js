@@ -1,5 +1,5 @@
-import { LEFT, RIGHT, UP, DOWN } from "../../../utils/input/Input";
-import { gridSize, snapToGrid, checkAABB } from "../../../helpers/grid/grid";
+import { LEFT, RIGHT, UP, DOWN } from "../../../Input.js";
+import { gridSize, snapToGrid, checkAABB } from "../../../utils/grid.js";
 const debug = false;
 export function tryMove(entity, delta, root) {
   let nextX = entity.destinationPosition.x;
@@ -33,7 +33,6 @@ export function tryMove(entity, delta, root) {
   } else {
     entity.pushing = check.collidee;
     // console.log(check.collidee)
-
   }
   // TODO Something if the move is blocked
   entity.facingDirection = entity._direction ?? entity.facingDirection;

@@ -1,6 +1,6 @@
-import { SWING_TIMER } from "../../../constants";
-import { sweepAttack } from "../../../actions/sweepAttack";
-import { interact } from "../../../actions/interact";
+import { SWING_TIMER } from "../../../constants.js";
+import { sweepAttack } from "../../../actions/sweepAttack.js";
+import { interact } from "../../../actions/interact.js";
 
 const validActions = {
   interact: interact,

@@ -36,8 +36,8 @@ export class StateMachine {
   }
 
   update(delta, root) {
-    // if this.entity.sensors 
-
+    // if this.entity.sensors
+    // console.log(this.currentState);
     const currentState = this.states[this.currentState];
     currentState.update(this.entity, delta, root);
     for (const event in currentState.transitions) {

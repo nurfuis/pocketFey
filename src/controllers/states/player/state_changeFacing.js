@@ -1,4 +1,4 @@
-import { changeFacing } from "../../abilities/player/ability_changeFaceing";
+import { changeFacing } from "../../abilities/player/ability_changeFaceing.js";
 export const changeFacingState = {
   update: (entity, delta, root) => changeFacing(entity, delta, root),
   transitions: {

@@ -1,6 +1,6 @@
-import { LEFT, RIGHT, UP, DOWN } from "../../../utils/input/Input";
-import { SWING_TIMER } from "../../../constants";
-import { Staff } from "../../../objects/items/Staff";
+import { LEFT, RIGHT, UP, DOWN } from "../../../Input.js";
+import { SWING_TIMER } from "../../../constants.js";
+import { Staff } from "../../../items/Staff.js";
 
 const validWeapons = {
   Staff: Staff,
@@ -8,7 +8,6 @@ const validWeapons = {
 
 export function action(entity, delta, root) {
   if (entity.isBusy === SWING_TIMER) {
-
     const direction = entity.facingDirection;
 
     // Get weapon

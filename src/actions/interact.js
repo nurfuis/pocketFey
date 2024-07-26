@@ -1,4 +1,4 @@
-import { PLAYER_REACH } from "../constants";
+import { PLAYER_REACH } from "../constants.js";
 
 export function interact(entity, delta, root) {
   const direction = entity.facingDirection;
@@ -18,7 +18,7 @@ export function interact(entity, delta, root) {
         entity.center.y - facingOffset,
         targetPoint.x,
         targetPoint.y,
-        entity,
+        entity
       );
 
       if (raycastHitA.collision) {
@@ -29,7 +29,7 @@ export function interact(entity, delta, root) {
           raycastHitA.position.x,
           raycastHitA.position.y,
           raycastHitA.position,
-          entity,
+          entity
         );
         hit = raycastHitA.entity;
       } else {
@@ -40,7 +40,7 @@ export function interact(entity, delta, root) {
           targetPoint.x,
           targetPoint.y,
           entity.center,
-          entity,
+          entity
         );
       }
 
@@ -55,7 +55,7 @@ export function interact(entity, delta, root) {
         entity.center.y,
         targetPoint.x,
         targetPoint.y,
-        entity,
+        entity
       );
 
       if (raycastHitD.collision) {
@@ -66,7 +66,7 @@ export function interact(entity, delta, root) {
           raycastHitD.position.x,
           raycastHitD.position.y,
           raycastHitD.position,
-          entity,
+          entity
         );
         hit = raycastHitD.entity;
       } else {
@@ -77,7 +77,7 @@ export function interact(entity, delta, root) {
           targetPoint.x,
           targetPoint.y,
           entity.center,
-          entity,
+          entity
         );
       }
       break;
@@ -90,7 +90,7 @@ export function interact(entity, delta, root) {
         entity.center.y + facingOffset,
         targetPoint.x,
         targetPoint.y,
-        entity,
+        entity
       );
 
       if (raycastHitG.collision) {
@@ -101,7 +101,7 @@ export function interact(entity, delta, root) {
           raycastHitG.position.x,
           raycastHitG.position.y,
           raycastHitG.position,
-          entity,
+          entity
         );
         hit = raycastHitG.entity;
       } else {
@@ -112,7 +112,7 @@ export function interact(entity, delta, root) {
           targetPoint.x,
           targetPoint.y,
           entity.center,
-          entity,
+          entity
         );
       }
       break;
@@ -125,7 +125,7 @@ export function interact(entity, delta, root) {
         entity.center.y,
         targetPoint.x,
         targetPoint.y,
-        entity,
+        entity
       );
 
       if (raycastHitJ.collision) {
@@ -136,7 +136,7 @@ export function interact(entity, delta, root) {
           raycastHitJ.position.x,
           raycastHitJ.position.y,
           raycastHitJ.position,
-          entity,
+          entity
         );
         hit = raycastHitJ.entity;
       } else {
@@ -147,7 +147,7 @@ export function interact(entity, delta, root) {
           targetPoint.x,
           targetPoint.y,
           entity.center,
-          entity,
+          entity
         );
       }
       break;

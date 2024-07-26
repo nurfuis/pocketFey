@@ -1,4 +1,4 @@
-import { stagger } from "../../abilities/player/ability_stagger";
+import { stagger } from "../../abilities/player/ability_stagger.js";
 export const staggerState = {
   update: (entity, delta, root) => stagger(entity, delta, root),
   transitions: {

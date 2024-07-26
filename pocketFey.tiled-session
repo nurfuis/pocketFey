@@ -5,7 +5,22 @@
         "assets/maps",
         "."
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "C:/Users/crame/dev/feyBrewster/assets/levels/aTestLab/0_0.tmj": {
+            "scale": 1.3916015625,
+            "selectedLayer": 7,
+            "viewCenter": {
+                "x": 256.17964912280706,
+                "y": 256.17964912280695
+            }
+        },
+        "C:/Users/crame/dev/feyBrewster/assets/levels/aTestLab/bartopTileset.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/crame/dev/feyBrewster/assets/levels/aTestLab/feyBrewsterTileSet.tsx": {
+            "scaleInDock": 1
+        },
         "assets/maps/world.tmj": {
             "scale": 26.125,
             "selectedLayer": 0,
@@ -40,25 +55,35 @@
             "scaleInDock": 1
         },
         "world.tmj": {
-            "scale": 2,
+            "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 275.75,
-                "y": 254.25
+                "x": 272.99999999999994,
+                "y": 202.99999999999997
             }
         },
         "world.tmj#base": {
             "scaleInDock": 1
+        },
+        "world.tmj#blob": {
+            "scaleInDock": 1
         }
     },
+    "last.imagePath": "C:/Users/crame/dev/pocketFey/assets/sprites",
     "openFiles": [
         "world.tmj"
     ],
     "project": "",
     "recentFiles": [
+        "C:/Users/crame/dev/feyBrewster/assets/levels/aTestLab/0_0.tmj",
         "world.tmj",
         "src/world.tmj",
         "assets/maps/world.tmj",
         "assets/maps/world.tmx"
-    ]
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
 }

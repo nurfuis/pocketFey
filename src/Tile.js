@@ -38,35 +38,46 @@ export class Tile extends GameObject {
       this.addChild(sprite);
     }
   }
+  findMatchingTileset() {
+    for (let i = 0; i < this.tilesets.length; i++) {
+      const data = this.tilesets[i];
 
+      if (this.id >= data["firstgid"]) {
+        return data["source"];
+        break;
+      }
+    }
+    return null;
+  }
+  //   function findMatchingTileset(tileSets, gid) {
+  //     for (let i = 0; i < tileSets.length; i++) {
+  //         const data = tileSets[i];
+
+  //         if (gid >= data["firstgid"] && (i + 1 === tileSets.length || gid < tileSets[i + 1]["firstgid"])) {
+  //             return data["source"];
+  //         }
+  //     }
+  //     return null;
+  // }
   drawImage(ctx) {
     const posX = this.position.x + this.parent.x * this.width;
     const posY = this.position.y + this.parent.y * this.height;
-
-    ctx.beginPath();
-
-    ctx.rect(posX, posY, this.width, this.height);
 
     const parent1 = this.parent;
     const parent2 = parent1.parent;
     const layerName = parent2.name;
 
     if (this.showGrid && layerName == "background") {
+      ctx.beginPath();
+      ctx.rect(posX, posY, this.width, this.height);
       ctx.strokeStyle = this.strokeColor;
       ctx.lineWidth = 1;
-      // ctx.fillText(`x${this.position.x},`, posX, posY + 16);
-      // ctx.fillText(`y${this.position.y}  `, posX, posY + 26);
-
       ctx.stroke();
-
       ctx.fillStyle = this.color;
       ctx.fill();
+      ctx.closePath();
+      ctx.fillStyle = "black";
     }
-    ctx.closePath();
-
-    ctx.fillStyle = "black";
-
-    ctx.lineWidth = 1;
   }
 
   ready() {
@@ -88,17 +99,5 @@ export class Tile extends GameObject {
 
       entities.addChild(keg);
     }
-  }
-
-  findMatchingTileset() {
-    for (let i = 0; i < this.tilesets.length; i++) {
-      const data = this.tilesets[i];
-
-      if (this.id >= data["firstgid"]) {
-        return data["source"];
-        break;
-      }
-    }
-    return null;
   }
 }

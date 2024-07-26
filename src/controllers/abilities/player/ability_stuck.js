@@ -1,4 +1,4 @@
-import { LEFT, RIGHT, UP, DOWN } from "../../../utils/input/Input";
+import { LEFT, RIGHT, UP, DOWN } from "../../../Input.js";
 
 export function stuck(entity, delta, root) {
   if (entity.facingDirection === LEFT) {

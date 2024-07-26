@@ -1,5 +1,3 @@
-import { events } from "../../../utils/Events";
-import { BASE_SPEED } from "../../../constants";
 export function stagger(entity, delta, root) {
   if (!entity.stagger) {
     entity.stagger = 0;

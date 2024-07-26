@@ -1,4 +1,4 @@
-import { LEFT, RIGHT, UP, DOWN } from "../../../utils/input/Input";
+import { LEFT, RIGHT, UP, DOWN } from "../../../Input.js";
 export function idleAi(entity, delta, root) {
     entity.tryMoveAttempts = 0;
     if (entity.facingDirection === LEFT) {

@@ -1,5 +1,5 @@
-import { LEFT, RIGHT, UP, DOWN } from "../../../utils/input/Input";
-import { TURN_DELAY } from "../../../constants";
+import { LEFT, RIGHT, UP, DOWN } from "../../../Input.js";
+import { TURN_DELAY } from "../../../constants.js";
 
 export function changeFacing(entity, delta, root) {
 

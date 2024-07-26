@@ -10,12 +10,12 @@ export const noDirection = (entity) => !entity._direction;
 
 export const newDestination = (entity) => {
   const distance = entity.position.distanceTo(entity.destinationPosition);
-  return distance > 1;
+  return distance >= 1;
 };
 
 export const hasArrived = (entity) => {
   const distance = entity.position.distanceTo(entity.destinationPosition);
-  return distance <= 1;
+  return distance < 1;
 };
 
 export const hasCollision = (entity) => entity.hasCollision;
@@ -24,8 +24,10 @@ export const noCollision = (entity) => !entity.hasCollision;
 export const isStaggered = (entity) => entity.stagger > 0;
 export const notStaggered = (entity) => entity.stagger <= 0;
 
-export const isNotFacingDirection = (entity) => entity.lastDirection != entity.facingDirection;
-export const isFacingDirection = (entity) => entity.lastDirection == entity.facingDirection;
+export const isNotFacingDirection = (entity) =>
+  entity.lastDirection != entity.facingDirection;
+export const isFacingDirection = (entity) =>
+  entity.lastDirection == entity.facingDirection;
 
 export const hasTurnDelay = (entity) => entity.turnDelay > 0;
 export const noTurnDelay = (entity) => entity.turnDelay <= 0;
@@ -50,7 +52,6 @@ export const hasNewDirection = (entity) => {
 export const hasSameDirection = (entity) => {
   return entity.direction === entity.moveHistory[1];
 };
-
 
 // vegetable
 export const isVegetable = (entity) => {

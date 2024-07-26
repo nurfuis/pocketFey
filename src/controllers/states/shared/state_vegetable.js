@@ -1,4 +1,4 @@
-import { doNothing } from "../../abilities/shared/ability_doNothing";
+import { doNothing } from "../../abilities/shared/ability_doNothing.js";
 
 export const vegetableState = {
   update: (entity) => doNothing(entity),

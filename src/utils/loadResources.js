@@ -12,6 +12,7 @@ class ResourceLoader {
     this.images = {};
 
     this.imageList = {
+      blob: "/assets/sprites/blob2.png",
       energy: "/assets/sprites/energy.png",
       keg: "/assets/sprites/woodenKeg.png",
       grainBag: "/assets/sprites/grainBag.png",
@@ -48,5 +49,11 @@ class ResourceLoader {
 
     return { images: this.images, sounds: null };
   }
+  static getInstance() {
+    if (!ResourceLoader.instance) {
+      ResourceLoader.instance = new ResourceLoader();
+    }
+    return ResourceLoader.instance;
+  }
 }
-export const resources = new ResourceLoader();
+export const resources = ResourceLoader.getInstance();
