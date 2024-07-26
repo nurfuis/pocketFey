@@ -48,8 +48,22 @@ gameLoop.name = "mainLoop";
 
 function sortChildren() {
   entities.children.sort((a, b) => {
-    const aQuadrant = a.position.x >= 0 ? (a.position.y >= 0 ? 1 : 4) : (a.position.y >= 0 ? 2 : 3);
-    const bQuadrant = b.position.x >= 0 ? (b.position.y >= 0 ? 1 : 4) : (a.position.y >= 0 ? 2 : 3);
+    const aQuadrant =
+      a.position.x >= 0
+        ? a.position.y >= 0
+          ? 1
+          : 4
+        : a.position.y >= 0
+        ? 2
+        : 3;
+    const bQuadrant =
+      b.position.x >= 0
+        ? b.position.y >= 0
+          ? 1
+          : 4
+        : a.position.y >= 0
+        ? 2
+        : 3;
 
     if (aQuadrant !== bQuadrant) {
       return aQuadrant - bQuadrant;
@@ -113,7 +127,10 @@ function createStartButton() {
   return startContainer;
 }
 async function launch() {
-  if (!resourcesLoaded) return;
+  if (!resourcesLoaded) {
+    console.log("Resources are not yet loaded");
+    return;
+  }
 
   gameWrapper = createGameWrapper();
   gameCanvasMain = createGameCanvasMain();
