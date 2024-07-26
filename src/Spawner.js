@@ -12,7 +12,6 @@ export class Spawner {
       const newEntity = new Entity();
       const entity = entityFactory(data, newEntity);
       this.spawnQueue.push(entity);
-      console.log("Spawn queue: ", this.spawnQueue);
     });
   }
   static getInstance() {
