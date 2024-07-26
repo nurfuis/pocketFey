@@ -40,11 +40,11 @@
             "scaleInDock": 1
         },
         "world.tmj": {
-            "scale": 0.75,
-            "selectedLayer": 0,
+            "scale": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 22.666666666666742,
-                "y": 64.66666666666663
+                "x": 275.75,
+                "y": 254.25
             }
         },
         "world.tmj#base": {
@@ -54,6 +54,7 @@
     "openFiles": [
         "world.tmj"
     ],
+    "project": "",
     "recentFiles": [
         "world.tmj",
         "src/world.tmj",

@@ -35,6 +35,7 @@ export class Player extends GameObject {
     super({
       position: new Vector2(48, 48),
     });
+    this.inventorySize = 1;
     this.canPickUpItems = true;
     this.itemPickUpShell = null;
     this.useAutoInput = false;
@@ -257,10 +258,10 @@ export class Player extends GameObject {
 
   onPickUpItem(item) {
     console.log(this.inventory.items.length);
-    if (this.inventory.items.length > 10) {
+    if (this.inventory.items.length > this.inventorySize) {
       this.canPickUpItems = false;
     } else if (
-      this.inventory.items.length <= 10 &&
+      this.inventory.items.length < this.inventorySize &&
       this.inventory.items.lengt >= 0
     ) {
       this.canPickUpItems = true;

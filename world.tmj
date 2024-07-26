@@ -108,7 +108,19 @@
          "draworder":"topdown",
          "id":2,
          "name":"entities",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":6,
+                 "height":32,
+                 "id":2,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Tile",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":192
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -130,7 +142,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":2,
+ "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

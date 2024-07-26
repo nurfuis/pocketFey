@@ -14,7 +14,7 @@ export class Keg extends GameObject {
     });
     const sprite = new Sprite({
       resource: IMAGE,
-      position: new Vector2(0, -20),
+      position: new Vector2(0, -24),
       scale: 1,
     });
     this.addChild(sprite);

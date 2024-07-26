@@ -6,11 +6,11 @@ import { Keg } from "./items/Keg.js";
 import { entities } from "../main.js";
 
 export class Tile extends GameObject {
-  constructor(chunk, i, tilesets, tileWidth, tileHeight, coords) {
+  constructor(id, tilesets, tileWidth, tileHeight, coords) {
     super({});
     this.color = "rgb(211,211,211, 0.1)";
     this.strokeColor = "rgb(099,099,099, 1)";
-    this.id = chunk.data[i];
+    this.id = id;
     this.tilesets = tilesets;
 
     this.width = tileWidth;
