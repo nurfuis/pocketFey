@@ -11,7 +11,7 @@ export class GrainBag extends GameObject {
     });
     const sprite = new Sprite({
       resource: resources.images.grainBag,
-      position: new Vector2(0, 0),
+      position: new Vector2(0, -20),
       scale: 1,
     });
     this.addChild(sprite);
@@ -26,8 +26,8 @@ export class GrainBag extends GameObject {
       const radius = pos.radius;
 
       if (
-        Math.abs(playerX - this.globalPosition.x - 16) <= radius &&
-        Math.abs(playerY - this.globalPosition.y - 16) <= radius
+        Math.abs(playerX - this.position.x - 16) <= radius &&
+        Math.abs(playerY - this.position.y - 16) <= radius
       ) {
         this.onCollideWithPlayer();
       }

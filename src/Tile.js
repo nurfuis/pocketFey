@@ -3,6 +3,7 @@ import { Vector2 } from "./Vector2.js";
 import { GameObject } from "./GameObject.js";
 import { GrainBag } from "./items/GrainBag.js";
 import { Keg } from "./items/Keg.js";
+import { entities } from "../main.js";
 
 export class Tile extends GameObject {
   constructor(chunk, i, tilesets, tileWidth, tileHeight, coords) {
@@ -69,6 +70,7 @@ export class Tile extends GameObject {
   }
 
   ready() {
+    // spawn an entity upon creation
     const offsetX = this.parent.position.x;
     const offsetY = this.parent.position.y;
     const globalPosition = new Vector2(
@@ -78,12 +80,13 @@ export class Tile extends GameObject {
 
     if (this.id == 1 && Math.random() < 0.02) {
       const grainBag = new GrainBag();
-      grainBag.globalPosition = globalPosition;
-      this.addChild(grainBag);
+      grainBag.position = globalPosition;
+      entities.addChild(grainBag);
     } else if (this.id == 1 && Math.random() < 0.02) {
       const keg = new Keg();
-      keg.globalPosition = globalPosition;
-      this.addChild(keg);
+      keg.position = globalPosition;
+
+      entities.addChild(keg);
     }
   }
 

@@ -25,8 +25,11 @@ let world;
 export const player = new Player();
 const inventory = new Inventory();
 
+export let entities;
+
 const update = (delta) => {
   main.stepEntry(delta, main);
+  sortChildren();
 };
 const draw = () => {
   gameCtx.clearRect(0, 0, gameCanvasMain.width, gameCanvasMain.height);
@@ -43,6 +46,22 @@ const draw = () => {
 const gameLoop = new GameLoop(update, draw);
 gameLoop.name = "mainLoop";
 
+function sortChildren() {
+  entities.children.sort((a, b) => {
+    const aQuadrant = a.position.x >= 0 ? (a.position.y >= 0 ? 1 : 4) : (a.position.y >= 0 ? 2 : 3);
+    const bQuadrant = b.position.x >= 0 ? (b.position.y >= 0 ? 1 : 4) : (a.position.y >= 0 ? 2 : 3);
+
+    if (aQuadrant !== bQuadrant) {
+      return aQuadrant - bQuadrant;
+    } else {
+      if (a.position.y !== b.position.y) {
+        return a.position.y - b.position.y;
+      } else {
+        return a.position.x - b.position.x;
+      }
+    }
+  });
+}
 function createGameCanvasMain() {
   const gameCanvasMain = document.createElement("canvas");
   gameCanvasMain.id = "gameCanvas";
@@ -110,6 +129,12 @@ async function launch() {
   main.world = world;
   main.addChild(world);
 
+  entities = main.world.children[foreground_id];
+
+  player.inventory = inventory;
+
+  entities.addChild(player);
+
   main.camera = new Camera(main.world.tileWidth);
   main.addChild(main.camera);
 
@@ -119,10 +144,6 @@ async function launch() {
     main.world.tileHeight,
     main.camera
   );
-
-  main.player = player;
-  main.world.children[foreground_id].addChild(main.player);
-  player.inventory = inventory;
 
   if (debug) {
     console.log(main);
@@ -136,5 +157,5 @@ window.onload = function () {
 
 events.on("RESOURCES_LOADED", this, () => {
   resourcesLoaded = true;
-  console.log("Resources are Loaded");
+  console.log("Resources are Loaded: ", resources);
 });
