@@ -48,7 +48,7 @@ export function tryMoveAi(entity, delta, root) {
     // console.log("cannot move");
   }
 
-  entity.facingDirection = entity._direction ?? entity.facingDirection;
+  entity.facingDirection = entity.direction ?? entity.facingDirection;
 }
 function getTile(position, world) {
   const background = world.children[0]; // layer id 0

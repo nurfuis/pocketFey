@@ -1,17 +1,14 @@
 import { LEFT, RIGHT, UP, DOWN } from "../../../Input.js";
 import { SWING_TIMER } from "../../../constants.js";
-import { Staff } from "../../../items/Staff.js";
 
-const validWeapons = {
-  Staff: Staff,
-};
+const validWeapons = {};
 
 export function action(entity, delta, root) {
   if (entity.isBusy === SWING_TIMER) {
     const direction = entity.facingDirection;
 
     // Get weapon
-    let weapon = entity.mainHand;
+    let weapon = undefined;
 
     if (validWeapons[weapon]) {
       weapon = validWeapons[weapon];
@@ -19,13 +16,13 @@ export function action(entity, delta, root) {
       console.warn("Equip a valid weapon");
     }
 
-    entity._attackWeapon = new weapon(0, 0, entity.currentWorld, direction);
+    // entity._attackWeapon = new weapon(0, 0, entity.currentWorld, direction);
 
-    if (direction === "RIGHT" || direction === "UP") {
-      entity.equipMinusZ.addChild(entity._attackWeapon);
-    } else {
-      entity.equipPlusZ.addChild(entity._attackWeapon);
-    }
+    // if (direction === "RIGHT" || direction === "UP") {
+    //   entity.equipMinusZ.addChild(entity._attackWeapon);
+    // } else {
+    //   entity.equipPlusZ.addChild(entity._attackWeapon);
+    // }
 
     if (entity.facingDirection === LEFT) {
       entity.body.animations.play("attackLeft");
@@ -47,6 +44,6 @@ export function action(entity, delta, root) {
 
   if (entity.isBusy <= 0) {
     entity.isBusy = 0;
-    entity._attackWeapon.destroy();
+    // entity._attackWeapon.destroy();
   }
 }

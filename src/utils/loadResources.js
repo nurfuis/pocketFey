@@ -1,4 +1,4 @@
-const debug = true;
+const debug = false;
 
 import { events } from "../Events.js";
 
@@ -40,7 +40,6 @@ class ResourceLoader {
       img.onload = () => {
         this.images[key].isLoaded = true;
         if (Object.values(this.images).every((image) => image.isLoaded)) {
-          console.log("Loading Images Complete!");
           events.emit("RESOURCES_LOADED");
         }
       };

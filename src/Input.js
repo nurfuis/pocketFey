@@ -1,4 +1,4 @@
-const debug = false;
+const debug = true;
 
 import { events } from "./Events.js";
 import { gameParams } from "../config/constants.js";
@@ -373,8 +373,7 @@ export class Input {
       if (debug) {
         console.log("click event:", e);
         console.log("target element:", e.target);
-        console.log("click position:", posX, posY);
-        console.log("click time:", Date.now());
+        
       }
     });
     document.addEventListener("mouseup", (e) => {

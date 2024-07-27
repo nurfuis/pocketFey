@@ -1,15 +1,16 @@
 import { LEFT, RIGHT, UP, DOWN } from "../../../Input.js";
 export function idle(entity, delta, root) {
-  if (entity.facingDirection === LEFT) {
+  const check = entity.facingDirection || entity._lastDirection;
+  if (check === LEFT) {
     entity.body.animations.play("standLeft");
   }
-  if (entity.facingDirection === RIGHT) {
+  if (check === RIGHT) {
     entity.body.animations.play("standRight");
   }
-  if (entity.facingDirection === UP) {
+  if (check === UP) {
     entity.body.animations.play("standUp");
   }
-  if (entity.facingDirection === DOWN) {
-    entity.body.animations.play("standDown");
+  if (check === DOWN) {
+    entity.body.animations.play("dance");
   }
 }

@@ -5,12 +5,12 @@ export const isIdle = (entity) => entity.isBusy <= 0;
 export const isClicking = (entity) => entity.isClicking;
 export const isNotClicking = (entity) => !entity.isClicking;
 
-export const hasDirection = (entity) => !!entity._direction;
-export const noDirection = (entity) => !entity._direction;
+export const hasDirection = (entity) => !!entity.direction;
+export const noDirection = (entity) => !entity.direction;
 
 export const newDestination = (entity) => {
   const distance = entity.position.distanceTo(entity.destinationPosition);
-  return distance >= 1;
+  return distance >= 0;
 };
 
 export const hasArrived = (entity) => {

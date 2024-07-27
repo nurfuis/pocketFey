@@ -38,12 +38,17 @@ export class Entity extends GameObject {
     if (this.moveHistory.length > 20) {
       this.moveHistory.shift();
     }
-    if (this.brain) {
+
+    if (!!this.brain) {
       this.controller.update();
     }
   }
   spawn() {
-    entities.addChild(this);
-    console.log("Entity Spawned: ", this);
+    if (!!entities) {
+      entities.addChild(this);
+      console.log("Entity Spawned: ", this);
+    } else {
+      console.error("Entities is:", entities);
+    }
   }
 }

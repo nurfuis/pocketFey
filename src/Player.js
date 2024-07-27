@@ -29,12 +29,15 @@ import { events } from "./Events.js";
 import { GameObject } from "./GameObject.js";
 import { globalCooldownDuration } from "../config/constants.js";
 import { resources } from "./utils/loadResources.js";
-
+import { StateMachine } from "./controllers/StateMachine.js";
 export class Player extends GameObject {
   constructor() {
     super({
       position: new Vector2(48, 48),
     });
+    this.brain = "user";
+    this.controller = new StateMachine(this);
+
     this.inventorySize = 8;
     this.canPickUpItems = true;
     this.itemPickUpShell = null;
@@ -49,15 +52,14 @@ export class Player extends GameObject {
     this.scale = 12;
     this.radius = 16;
 
-    this.speed = 2;
     this.facingDirection = DOWN;
 
     this.powerSupply = new Battery();
-    this.powerSupply.storedEnergy = 4000;
-    this.powerSupply.storedCapacity = 4000;
+    this.powerSupply.storedEnergy = 12000;
+    this.powerSupply.storedCapacity = 12000;
 
     this.motor = new Motor();
-    this.motor.KV = 10;
+    this.motor.KV = 12;
 
     this.transmission = new Transmission();
     this.transmission.gear = 2;
@@ -118,14 +120,7 @@ export class Player extends GameObject {
     // plus encumberance
     return this._mass + this?.inventory?.items?.length * this.scale ** 2;
   }
-
   move(direction, world) {
-    if (direction && direction != this._lastDirection) {
-      this._velocity = new Vector2(0, 0);
-      this._acceleration = new Vector2(0, 0);
-      this.facingDirection = direction;
-      return;
-    }
     if (direction) {
       const torque =
         (this.motor.KV *
@@ -172,7 +167,7 @@ export class Player extends GameObject {
         this._acceleration.x = aX - this._drag;
       }
 
-      if ((aX < 4 && aX > 0) || (aX > -4 && aX < 0)) {
+      if ((aX < 1 && aX > 0) || (aX > -1 && aX < 0)) {
         this._acceleration.x = 0;
       }
 
@@ -183,7 +178,7 @@ export class Player extends GameObject {
         this._acceleration.y = aY - this._drag;
       }
 
-      if ((aY < 4 && aY > 0) || (aY > -4 && aY < 0)) {
+      if ((aY < 1 && aY > 0) || (aY > -1 && aY < 0)) {
         this._acceleration.y = 0;
       }
     }
@@ -193,18 +188,18 @@ export class Player extends GameObject {
     const forceX = this._acceleration.x * this.totalMass * sag;
     const forceY = this._acceleration.y * this.totalMass * sag;
 
-    const vX = forceX / this.totalMass;
-    const vY = forceY / this.totalMass;
+    const vX = forceX / this._mass;
+    const vY = forceY / this._mass;
 
     if (vX < 0 || vX > 0) {
       this._velocity.x = vX * 1 - this._gravity;
-    } else if ((vX < 4 && vX > 0) || (vX > -4 && vX < 0)) {
+    } else if ((vX < 1 && vX > 0) || (vX > -1 && vX < 0)) {
       this._velocity.x = 0;
     }
 
     if (vY < 0 || vY > 0) {
       this._velocity.y = vY * 1 - this._gravity;
-    } else if ((vY < 4 && vY > 0) || (vY > -4 && vY < 0)) {
+    } else if ((vY < 1 && vY > 0) || (vY > -1 && vY < 0)) {
       this._velocity.y = 0;
     }
     let nextX;
@@ -233,6 +228,7 @@ export class Player extends GameObject {
     } else {
       this._velocity = new Vector2(0, 0);
       this._acceleration = new Vector2(0, 0);
+
       switch (this.facingDirection) {
         case LEFT:
           this.body.animations.play("standLeft");
@@ -255,7 +251,6 @@ export class Player extends GameObject {
       }
     }
   }
-
   onPickUpItem(item) {
     console.log(this.inventory.items.length);
     if (this.inventory.items.length > this.inventorySize) {
@@ -279,7 +274,6 @@ export class Player extends GameObject {
       this.addChild(this.itemPickUpShell);
     }
   }
-
   workOnItemPickUp(delta) {
     this.itemPickUpTime -= delta;
     this.body.animations.play("pickUpDown");
@@ -288,7 +282,6 @@ export class Player extends GameObject {
       this.itemPickUpShell = null;
     }
   }
-
   tryEmitPosition() {
     if (this.lastX == this.position.x && this.lastY == this.position.y) {
       return;
@@ -331,36 +324,44 @@ export class Player extends GameObject {
       this.workOnItemPickUp(delta);
       return;
     }
-    this._lastDirection = this.direction;
 
     const { input } = root;
     const { automatedInput } = root;
 
+    if (!!this.direction) this._lastDirection = this.direction;
+
     if (this.useAutoInput) {
       this.direction = input.direction || automatedInput.direction;
     } else {
-      this.direction = input.direction;
+      this.direction = input?.direction;
     }
 
-    this.move(this.direction, world);
+    if (this.direction && this.direction != this._lastDirection) {
+      this._velocity = new Vector2(0, 0);
+      this._acceleration = new Vector2(0, 0);
+      this.facingDirection = this.direction;
+      return;
+    }
+    // this.move(this.direction, world);
+    this.controller.update(delta, root);
 
     if (!this.direction) {
       if (this.powerSupply.storedEnergy < this.powerSupply.storedCapacity) {
         switch (this.powerSupply.storedCharge) {
           case "absorb":
-            this.powerSupply.storedEnergy += 8;
+            this.powerSupply.storedEnergy += 2;
 
             break;
           case "bulk":
-            this.powerSupply.storedEnergy += 12;
+            this.powerSupply.storedEnergy += 3;
 
             break;
           case "low":
-            this.powerSupply.storedEnergy += 16;
+            this.powerSupply.storedEnergy += 4;
 
             break;
           default:
-            this.powerSupply.storedEnergy += 4;
+            this.powerSupply.storedEnergy += 1;
 
             break;
         }
@@ -379,7 +380,6 @@ export class Player extends GameObject {
 
     this.tryEmitPosition();
   }
-
   drawManaBar(ctx, posX, posY) {
     const width = this.width; // Assuming 'this.width' represents the total width for the bar
     const height = 4;
@@ -434,8 +434,8 @@ export class Player extends GameObject {
     this.drawManaBar(ctx, posX - 16, posY - 44);
   }
 }
-
 function getTile(position, world) {
+  // console.log(world);
   const background = world.children[0]; // layer id 0
   let currentChunk;
   let currentTile;

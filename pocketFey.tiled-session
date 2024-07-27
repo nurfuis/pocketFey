@@ -1,9 +1,9 @@
 {
     "activeFile": "world.tmj",
     "expandedProjectPaths": [
-        "assets",
+        ".",
         "assets/maps",
-        "."
+        "assets"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -55,10 +55,13 @@
             "scaleInDock": 1
         },
         "world.tmj": {
+            "expandedObjectLayers": [
+                2
+            ],
             "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 272.99999999999994,
+                "x": 182.66666666666669,
                 "y": 202.99999999999997
             }
         },
@@ -75,8 +78,8 @@
     ],
     "project": "",
     "recentFiles": [
-        "C:/Users/crame/dev/feyBrewster/assets/levels/aTestLab/0_0.tmj",
         "world.tmj",
+        "C:/Users/crame/dev/feyBrewster/assets/levels/aTestLab/0_0.tmj",
         "src/world.tmj",
         "assets/maps/world.tmj",
         "assets/maps/world.tmx"

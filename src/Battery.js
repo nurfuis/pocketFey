@@ -1,7 +1,7 @@
 export class Battery {
   constructor() {
-    this.storedEnergy = 120000;
-    this.storedCapacity = 120000; // mHa
+    this.storedEnergy = 80000;
+    this.storedCapacity = 80000; // mHa
     this.floatStage = 0.95;
     this.absorptionStage = 0.8;
     this.lowStage = 0.5;
@@ -24,34 +24,25 @@ export class Battery {
     }
   }
   checkState() {
-    if (
-      this.storedEnergy >=
-      this.storedCapacity * this.floatStage
-    ) {
+    if (this.storedEnergy >= this.storedCapacity * this.floatStage) {
       this.storedCharge = "float";
     } else if (
       this.storedEnergy < this.storedCapacity &&
-      this.storedEnergy >=
-        this.storedCapacity * this.absorptionStage
+      this.storedEnergy >= this.storedCapacity * this.absorptionStage
     ) {
       this.storedCharge = "absorb";
     } else if (
-      this.storedEnergy <
-        this.storedCapacity * this.absorptionStage &&
-      this.storedEnergy >
-        this.storedCapacity * this.lowStage
+      this.storedEnergy < this.storedCapacity * this.absorptionStage &&
+      this.storedEnergy > this.storedCapacity * this.lowStage
     ) {
       this.storedCharge = "bulk";
     } else if (
-      this.storedEnergy <
-        this.storedCapacity * this.lowStage &&
-      this.storedEnergy >
-        this.storedCapacity * this.criticalStage
+      this.storedEnergy < this.storedCapacity * this.lowStage &&
+      this.storedEnergy > this.storedCapacity * this.criticalStage
     ) {
       this.storedCharge = "low";
     } else if (
-      this.storedEnergy <
-        this.storedCapacity * this.criticalStage &&
+      this.storedEnergy < this.storedCapacity * this.criticalStage &&
       this.storedEnergy > 0
     ) {
       this.storedCharge = "critical";
