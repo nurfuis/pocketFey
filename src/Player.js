@@ -30,6 +30,7 @@ import { GameObject } from "./GameObject.js";
 import { globalCooldownDuration } from "../config/constants.js";
 import { resources } from "./utils/loadResources.js";
 import { StateMachine } from "./controllers/StateMachine.js";
+import { PLAYER_COLOR } from "./constants.js";
 export class Player extends GameObject {
   constructor() {
     super({
@@ -59,7 +60,7 @@ export class Player extends GameObject {
     this.powerSupply.storedCapacity = 12000;
 
     this.motor = new Motor();
-    this.motor.KV = 12;
+    this.motor.KV = 10;
 
     this.transmission = new Transmission();
     this.transmission.gear = 2;
@@ -77,7 +78,7 @@ export class Player extends GameObject {
     this.shadow = new Sprite({
       resource: resources.images.shadow,
       frameSize: new Vector2(32, 32),
-      position: new Vector2(-32, -49),
+      position: new Vector2(-32, -52),
       scale: 2,
     });
     this.body = new Sprite({
@@ -87,7 +88,7 @@ export class Player extends GameObject {
       vFrames: 8,
       frame: 1,
       scale: 1,
-      position: new Vector2(-16, -52), // offset x, y
+      position: new Vector2(-16, -54), // offset x, y
       animations: new Animations({
         dance: new FrameIndexPattern(DANCE),
         spin: new FrameIndexPattern(SPIN),
@@ -380,6 +381,13 @@ export class Player extends GameObject {
 
     this.tryEmitPosition();
   }
+  drawCircle(ctx, position, radius) {
+    ctx.strokeStyle = PLAYER_COLOR;
+
+    ctx.beginPath();
+    ctx.arc(position.x, position.y, radius, 0, 2 * Math.PI);
+    ctx.stroke();
+  }
   drawManaBar(ctx, posX, posY) {
     const width = this.width; // Assuming 'this.width' represents the total width for the bar
     const height = 4;
@@ -427,10 +435,11 @@ export class Player extends GameObject {
     ctx.closePath();
   }
   drawImage(ctx) {
+    this.drawCircle(ctx, this.position, this.radius);
     const posX = this.position.x;
     const posY = this.position.y;
     // ctx.fillText(`Player: ${posX}, ${posY}  `, posX, posY + 16);
-
+    this.drawCircle(ctx, this.position, this.radius);
     this.drawManaBar(ctx, posX - 16, posY - 44);
   }
 }

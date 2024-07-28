@@ -136,6 +136,16 @@
                          "name":"brain",
                          "type":"string",
                          "value":"blob"
+                        }, 
+                        {
+                         "name":"shadow.offset",
+                         "type":"string",
+                         "value":"-31,-54"
+                        }, 
+                        {
+                         "name":"sprite.offset",
+                         "type":"string",
+                         "value":"-32,-37"
                         }],
                  "rotation":0,
                  "type":"Entity",

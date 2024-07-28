@@ -32,7 +32,8 @@ export function entityFactory(pkg, newEntity) {
     position: new Vector2(1, -16),
     scale: 2,
   });
-
+  newEntity.shadow = shadow;
+  
   const tileSet = findMatchingTileset(pkg.tileSets, pkg.data.gid);
   const body = new Sprite({
     resource: tileSet,

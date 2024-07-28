@@ -1,6 +1,4 @@
 import { FrameIndexPattern } from "../FrameIndexPattern.js";
-import { Vector2 } from "../Vector2.js";
-import { resources } from "../utils/loadResources.js";
 import { Animations } from "../Animations.js";
 import { StateMachine } from "../controllers/StateMachine.js";
 import {
@@ -34,14 +32,8 @@ export const propertyHandlers = {
     newEntity.brain = value;
     newEntity.controller = new StateMachine(newEntity);
   },
-  direction: (newEntity, value) => {
-    newEntity.direction = value;
-  },
   shape: (newEntity, value) => {
     newEntity.shape = value;
-  },
-  layer: (newEntity, value) => {
-    newEntity.layer = value;
   },
   "stat.speed": (newEntity, value) => {
     newEntity.speed = value;
@@ -64,39 +56,26 @@ export const propertyHandlers = {
   sensingRadius: (newEntity, value) => {
     newEntity.sensingRadius = value;
   },
-  "shadow.offset.x": (newEntity, value) => {
-    if (typeof value !== "number" || !Number.isInteger(value)) {
+  "shadow.offset": (newEntity, value) => {
+    const offsetParts = value.split(",");
+    if (offsetParts.length !== 2) {
       throw new TypeError(
-        "shadow.offset.x must be an integer. Check custom properties of the template in Tiled."
+        "shadow.offset must be a pair of integers separated by a comma. Check custom properties of the template in Tiled."
       );
     }
-    newEntity.shadow.position.x = value;
-  },
-  "shadow.offset.y": (newEntity, value) => {
-    if (typeof value !== "number" || !Number.isInteger(value)) {
+
+    const [x, y] = offsetParts.map((part) => parseInt(part, 10));
+    if (isNaN(x) || isNaN(y)) {
       throw new TypeError(
-        "shadow.offset.y must be an integer. Check custom properties of the template in Tiled."
+        "shadow.offset values must be integers. Check custom properties of the template in Tiled."
       );
     }
-    newEntity.shadow.position.y = value;
+    console.log(newEntity.shadow);
+    newEntity.shadow.position.x = x;
+    newEntity.shadow.position.y = y;
   },
   "shadow.scale": (newEntity, value) => {
     newEntity.shadow.scale = value;
-  },
-  "sprite.hFrames": (newEntity, value) => {
-    newEntity.body.hFrames = value;
-  },
-  "sprite.vFrames": (newEntity, value) => {
-    newEntity.body.vFrames = value;
-  },
-  "sprite.frameSize": (newEntity, value) => {
-    newEntity.body.frameSize = new Vector2(value, value);
-  },
-  "sprite.frameWidth": (newEntity, value) => {
-    newEntity.body.frameSize.x = value;
-  },
-  "sprite.frameHeight": (newEntity, value) => {
-    newEntity.body.frameSize.y = value;
   },
   "sprite.frame": (newEntity, value) => {
     newEntity.body.frame = value;
@@ -104,90 +83,23 @@ export const propertyHandlers = {
   "sprite.spacing": (newEntity, value) => {
     newEntity.body.spacing = value;
   },
-  "sprite.resource": (newEntity, value) => {
-    const resourceObject = resources.images[value];
-    if (resourceObject) {
-      newEntity.body.resource = resourceObject;
-    } else {
-      console.error(`Missing resource: ${value}`);
-    }
-  },
-  "sprite.offset.x": (newEntity, value) => {
-    if (typeof value !== "number" || !Number.isInteger(value)) {
+  "sprite.offset": (newEntity, value) => {
+    const offsetParts = value.split(",");
+    if (offsetParts.length !== 2) {
       throw new TypeError(
-        "sprite.offset.x must be an integer. Check custom properties of the template in Tiled."
+        "sprite.offset must be a pair of integers separated by a comma. Check custom properties of the template in Tiled."
       );
-    }
-    newEntity.body.position.x = value;
-  },
-  "sprite.offset.y": (newEntity, value) => {
-    if (typeof value !== "number" || !Number.isInteger(value)) {
-      throw new TypeError(
-        "sprite.offset.y must be an integer. Check custom properties of the template in Tiled."
-      );
-    }
-    newEntity.body.position.y = value;
-  },
-  "animations.idle": (newEntity) => {
-    if (!newEntity.body.animations) {
-      newEntity.body.animations = Animations.create();
     }
 
-    newEntity.body.animations.addAnimation("idle", new FrameIndexPattern(IDLE));
-  },
-  "animations.moving": (newEntity) => {
-    if (!newEntity.body.animations) {
-      newEntity.body.animations = Animations.create();
+    const [x, y] = offsetParts.map((part) => parseInt(part, 10));
+    if (isNaN(x) || isNaN(y)) {
+      throw new TypeError(
+        "sprite.offset values must be integers. Check custom properties of the template in Tiled."
+      );
     }
-    newEntity.body.animations.addAnimation(
-      "moving",
-      new FrameIndexPattern(MOVING)
-    );
-  },
-  "animations.shield": (newEntity) => {
-    if (!newEntity.body.animations) {
-      newEntity.body.animations = Animations.create();
-    }
-    newEntity.body.animations.addAnimation(
-      "shield",
-      new FrameIndexPattern(SHIELD)
-    );
-  },
-  "animations.woodenKettleBoiling": (newEntity) => {
-    if (!newEntity.body.animations) {
-      newEntity.body.animations = Animations.create();
-    }
-    newEntity.body.animations.addAnimation(
-      "woodenKettleBoiling",
-      new FrameIndexPattern(WOODEN_KETTLE_BOILING)
-    );
-  },
-  "animations.woodenKettleEmpty": (newEntity) => {
-    if (!newEntity.body.animations) {
-      newEntity.body.animations = Animations.create();
-    }
-    newEntity.body.animations.addAnimation(
-      "woodenKettleEmpty",
-      new FrameIndexPattern(WOODEN_KETTLE_EMPTY)
-    );
-  },
-  "animations.woodenMashTunMashing": (newEntity) => {
-    if (!newEntity.body.animations) {
-      newEntity.body.animations = Animations.create();
-    }
-    newEntity.body.animations.addAnimation(
-      "woodenMashTunMashing",
-      new FrameIndexPattern(WOODEN_MASH_TUN_MASHING)
-    );
-  },
-  "animations.woodenMashTunEmpty": (newEntity) => {
-    if (!newEntity.body.animations) {
-      newEntity.body.animations = Animations.create();
-    }
-    newEntity.body.animations.addAnimation(
-      "woodenMashTunEmpty",
-      new FrameIndexPattern(WOODEN_MASH_TUN_EMPTY)
-    );
+
+    newEntity.body.position.x = x;
+    newEntity.body.position.y = y;
   },
   animations: (newEntity, value) => {
     if (!newEntity.body.animations) {
