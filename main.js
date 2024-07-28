@@ -1,5 +1,6 @@
 const debug = true;
-let mode = 1;
+let state = 1;
+let showOffscreen = false;
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
@@ -38,6 +39,9 @@ let mapData;
 let main;
 let world;
 
+let offscreen;
+let grid;
+
 export const player = new Player();
 const inventory = new Inventory();
 player.inventory = inventory;
@@ -53,6 +57,7 @@ const update = (delta) => {
   }
 
   main.stepEntry(delta, main);
+  offscreen.stepEntry(delta, offscreen);
 
   if (!!entities) sortChildren();
 };
@@ -67,6 +72,9 @@ const draw = () => {
   ctx.restore();
 
   offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+
+  if (showOffscreen) offscreen.draw(offscreenCtx, 0, 0);
+
   ctx.drawImage(offscreenCanvas, 0, 0);
 
   inventory.draw(ctx, 0, 0);
@@ -148,18 +156,7 @@ function createStartButton() {
   startButton.textContent = "Start";
   startButton.id = "start";
   startButton.addEventListener("click", () => {
-    switch (mode) {
-      case 1:
-        startMain();
-        break;
-
-      case 2:
-        startTurnBased();
-        break;
-      default:
-        //
-        break;
-    }
+    startMain();
     startContainer.remove();
     console.log("Start!");
   });
@@ -201,13 +198,13 @@ function startTurnBased() {
   init();
   function init() {
     if (!gameStarted) {
-      main = new GameObject({ position: new Vector2(0, 0) });
+      offscreen = new GameObject({ position: new Vector2(0, 0) });
 
-      main.input = new Input(windowWidth / COLUMNS, windowHeight / ROWS);
-      main.automatedInput = automatedInput;
+      // offscreen.input = new Input(windowWidth / COLUMNS, windowHeight / ROWS);
+      offscreen.automatedInput = automatedInput;
 
-      world = new Grid();
-      main.addChild(world);
+      grid = new Grid();
+      offscreen.addChild(grid);
 
       remainingTime = TIMER;
       startTimer();
@@ -217,10 +214,24 @@ function startTurnBased() {
       gameCanvasMain.addEventListener("mousedown", (e) => {
         const rect = gameCanvasMain.getBoundingClientRect();
 
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
+        const offsetClickX = Math.round(e.clientX - rect.left);
+        const offsetClickY = Math.round(e.clientY - rect.top);
 
-        console.log("Click offset:", clickX, clickY);
+        const mainClickX = Math.round(
+          e.clientX - rect.left - main.camera.position.x - world.tileWidth
+        );
+        const mainCLickY = Math.round(
+          e.clientY - rect.top - main.camera.position.y - world.tileHeight
+        );
+
+        console.log(
+          "Click main:",
+          mainClickX,
+          mainCLickY,
+          "Click offset:",
+          offsetClickX,
+          offsetClickY
+        );
       });
 
       gameLoop.start();
@@ -249,25 +260,24 @@ async function startMain() {
 
   if (debug) console.log(main);
 
-  gameCanvasMain.addEventListener("mousedown", (e) => {
-    const rect = gameCanvasMain.getBoundingClientRect();
-
-    const clickX =
-      e.clientX - rect.left - main.camera.position.x - world.tileWidth;
-    const clickY =
-      e.clientY - rect.top - main.camera.position.y - world.tileHeight;
-
-    console.log("Click offset:", clickX, clickY);
-  });
-  gameLoop.start();
+  // gameLoop.start();
+  startTurnBased();
 }
 events.on("F1", this, () => {
-  switch (mode) {
+  switch (state) {
     case 1:
-      startMain();
+      state = 2;
+
+      showOffscreen = !showOffscreen;
+      console.log(state);
+
       break;
     case 2:
-      startTurnBased();
+      state = 1;
+
+      showOffscreen = !showOffscreen;
+      console.log(state);
+
       break;
     default:
       break;
@@ -278,18 +288,7 @@ window.onload = function () {
 };
 events.on("RESOURCES_LOADED", this, () => {
   if (!!AUTO_START) {
-    switch (mode) {
-      case 1:
-        startMain();
-        break;
-
-      case 2:
-        startTurnBased();
-        break;
-      default:
-        //
-        break;
-    }
+    startMain();
     const startScreen = document.querySelectorAll(".container")[0];
     if (!!startScreen) startScreen.remove();
   }

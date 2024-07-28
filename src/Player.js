@@ -1,6 +1,6 @@
-import { Battery } from "./Battery.js";
-import { Motor } from "./Motor.js";
-import { Transmission } from "./Transmission.js";
+import { Battery } from "./components/Battery.js";
+import { Motor } from "./components/Motor.js";
+import { Transmission } from "./components/Transmission.js";
 
 import { Vector2 } from "./Vector2.js";
 import { Sprite } from "./Sprite.js";

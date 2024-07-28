@@ -203,6 +203,7 @@ export class Input {
       }
       if (e.code === "F1") {
         e.preventDefault();
+        console.log("Pressed F1");
         events.emit("F1");
       }
       if (e.code === "F2") {
