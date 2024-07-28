@@ -34,7 +34,6 @@ export class Grid extends GameObject {
     super({
       position: new Vector2(0, 0),
     });
-    this.id = "world";
     this.width = WORLD_WIDTH;
     this.height = WORLD_HEIGHT;
 
@@ -377,9 +376,9 @@ export class Grid extends GameObject {
   }
   // updateTerrain() {}
 
-  // step(delta, root) {
-  //   this.updateTerrain(delta, root);
-  // }
+  step(delta, root) {
+    // this.updateTerrain(delta, root);
+  }
 
   drawImage(ctx) {
     ctx.beginPath();

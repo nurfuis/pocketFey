@@ -1,5 +1,8 @@
 const debug = true;
-let scene = 1;
+let mode = 1;
+
+const windowWidth = window.innerWidth;
+const windowHeight = window.innerHeight;
 
 import { resources } from "./src/utils/loadResources.js";
 import { foreground_id, gameParams } from "./config/constants.js";
@@ -24,16 +27,16 @@ import {
   WORLD_WIDTH,
 } from "./src/constants.js";
 
-let resourcesLoaded = false;
-let gameWrapper;
-let gameCanvasMain;
-let gameCtx;
+const gameWrapper = createGameWrapper();
+const gameCanvasMain = createGameCanvasMain();
+const ctx = gameCanvasMain.getContext("2d");
+
+const offscreenCanvas = createGameOffscreenCanvas();
+const offscreenCtx = offscreenCanvas.getContext("2d");
+
 let mapData;
 let main;
 let world;
-
-const automatedInput = new AutomatedInput();
-const spawner = Spawner.getInstance();
 
 export const player = new Player();
 const inventory = new Inventory();
@@ -41,25 +44,32 @@ player.inventory = inventory;
 
 export let entities;
 
-const update = (delta) => {
-  main.stepEntry(delta, main);
-  if (!!entities) sortChildren();
+const spawner = Spawner.getInstance();
+const automatedInput = new AutomatedInput();
 
+const update = (delta) => {
   if (!!spawner.spawnQueue && spawner.spawnQueue.length > 0) {
     spawner.update();
   }
+
+  main.stepEntry(delta, main);
+
+  if (!!entities) sortChildren();
 };
 const draw = () => {
-  gameCtx.clearRect(0, 0, gameCanvasMain.width, gameCanvasMain.height);
-  gameCtx.save();
+  ctx.clearRect(0, 0, gameCanvasMain.width, gameCanvasMain.height);
+  ctx.save();
 
-  main?.camera?.follow(gameCtx, 0, 0);
+  main?.camera?.follow(ctx, 0, 0);
 
-  main.draw(gameCtx, 0, 0);
+  main.draw(ctx, 0, 0);
 
-  gameCtx.restore();
+  ctx.restore();
 
-  inventory.draw(gameCtx, 0, 0);
+  offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+  ctx.drawImage(offscreenCanvas, 0, 0);
+
+  inventory.draw(ctx, 0, 0);
 };
 
 const gameLoop = new GameLoop(update, draw);
@@ -95,22 +105,71 @@ function sortChildren() {
     }
   });
 }
+function createGameOffscreenCanvas() {
+  const gameOffscreenCanvas = document.createElement("canvas");
+  gameOffscreenCanvas.width = WORLD_WIDTH;
+  gameOffscreenCanvas.height = WORLD_HEIGHT;
 
-function startTurn() {
-  gameWrapper = createGameWrapper("turnBased");
-  gameCanvasMain = createGameCanvasMain();
-  gameCtx = gameCanvasMain.getContext("2d");
+  return gameOffscreenCanvas;
+}
+function createGameCanvasMain() {
+  const gameCanvasMain = document.createElement("canvas");
+  gameCanvasMain.id = "gameCanvas";
+  gameCanvasMain.style.zIndex = "1";
 
-  gameCanvasMain.addEventListener("mousedown", (e) => {
-    // Get the bounding rectangle of the canvas element
-    const rect = gameCanvasMain.getBoundingClientRect();
+  gameCanvasMain.width = windowWidth;
+  gameCanvasMain.height = windowHeight;
 
-    // Calculate click offsets relative to the canvas
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+  gameCanvasMain.style.backgroundColor = gameParams.backgroundColor;
 
-    console.log("Click offset:", clickX, clickY);
+  gameWrapper.appendChild(gameCanvasMain);
+  return gameCanvasMain;
+}
+function createGameWrapper() {
+  const body = document.getElementsByTagName("body");
+  const gameWrapper = document.createElement("div");
+  gameWrapper.style.position = "relative";
+  gameWrapper.style.display = "flex";
+  gameWrapper.style.justifyContent = "center";
+  gameWrapper.style.alignItems = "center";
+  body[0].appendChild(gameWrapper);
+  return gameWrapper;
+}
+function createStartButton() {
+  const body = document.getElementsByTagName("body");
+
+  const startContainer = document.createElement("div");
+  startContainer.classList.add("container");
+
+  const startChild = document.createElement("div");
+  startContainer.appendChild(startChild);
+
+  const startButton = document.createElement("button");
+  startButton.textContent = "Start";
+  startButton.id = "start";
+  startButton.addEventListener("click", () => {
+    switch (mode) {
+      case 1:
+        startMain();
+        break;
+
+      case 2:
+        startTurnBased();
+        break;
+      default:
+        //
+        break;
+    }
+    startContainer.remove();
+    console.log("Start!");
   });
+
+  startChild.appendChild(startButton);
+
+  body[0].appendChild(startContainer);
+  return startContainer;
+}
+function startTurnBased() {
   const TIMER = 600;
 
   let gameStarted = false;
@@ -144,7 +203,7 @@ function startTurn() {
     if (!gameStarted) {
       main = new GameObject({ position: new Vector2(0, 0) });
 
-      main.input = new Input(WORLD_WIDTH / COLUMNS, WORLD_HEIGHT / ROWS);
+      main.input = new Input(windowWidth / COLUMNS, windowHeight / ROWS);
       main.automatedInput = automatedInput;
 
       world = new Grid();
@@ -152,88 +211,30 @@ function startTurn() {
 
       remainingTime = TIMER;
       startTimer();
-      gameLoop.start();
-      // document.querySelectorAll(".container")[0].style.display = "none";
+
       gameStarted = true;
+
+      gameCanvasMain.addEventListener("mousedown", (e) => {
+        const rect = gameCanvasMain.getBoundingClientRect();
+
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        console.log("Click offset:", clickX, clickY);
+      });
+
+      gameLoop.start();
     }
   }
-}
-
-function createGameCanvasMain() {
-  const gameCanvasMain = document.createElement("canvas");
-  gameCanvasMain.id = "gameCanvas";
-  gameCanvasMain.style.zIndex = "1";
-
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-  gameCanvasMain.width = windowWidth;
-  gameCanvasMain.height = windowHeight;
-
-  gameCanvasMain.style.backgroundColor = gameParams.backgroundColor;
-
-  gameWrapper.appendChild(gameCanvasMain);
-  return gameCanvasMain;
-}
-function createGameWrapper() {
-  const body = document.getElementsByTagName("body");
-  const gameWrapper = document.createElement("div");
-  gameWrapper.style.position = "relative";
-  gameWrapper.style.display = "flex";
-  gameWrapper.style.justifyContent = "center";
-  gameWrapper.style.alignItems = "center";
-  body[0].appendChild(gameWrapper);
-  return gameWrapper;
-}
-function createStartButton() {
-  const body = document.getElementsByTagName("body");
-
-  const startContainer = document.createElement("div");
-  startContainer.classList.add("container");
-
-  const startChild = document.createElement("div");
-  startContainer.appendChild(startChild);
-
-  const startButton = document.createElement("button");
-  startButton.textContent = "Start";
-  startButton.id = "start";
-  startButton.addEventListener("click", () => {
-    switch (scene) {
-      case 1:
-        startMain();
-        break;
-
-      case 2:
-        startTurn();
-        break;
-      default:
-        //
-        break;
-    }
-    startContainer.remove();
-    console.log("Start!");
-  });
-
-  startChild.appendChild(startButton);
-
-  body[0].appendChild(startContainer);
-  return startContainer;
 }
 async function startMain() {
-  if (!resourcesLoaded) {
-    console.error("Resources are not loaded");
-    return;
-  }
-  // make new canvas
-  gameWrapper = createGameWrapper("world");
-  gameCanvasMain = createGameCanvasMain();
-  gameCtx = gameCanvasMain.getContext("2d");
-
   mapData = await loadMap();
   main = new GameObject({ position: new Vector2(0, 0) });
   world = new World();
 
   const worldReady = await world.build(mapData);
   if (debug) console.log("World Ready: ", worldReady);
+
   main.addChild(world);
 
   entities = world.children[foreground_id];
@@ -246,9 +247,8 @@ async function startMain() {
   main.automatedInput = automatedInput;
   main.input = new Input(world.tileWidth, world.tileHeight, main.camera);
 
-  if (debug) {
-    console.log(main);
-  }
+  if (debug) console.log(main);
+
   gameCanvasMain.addEventListener("mousedown", (e) => {
     const rect = gameCanvasMain.getBoundingClientRect();
 
@@ -262,10 +262,12 @@ async function startMain() {
   gameLoop.start();
 }
 events.on("F1", this, () => {
-  switch (scene) {
+  switch (mode) {
     case 1:
+      startMain();
       break;
     case 2:
+      startTurnBased();
       break;
     default:
       break;
@@ -275,15 +277,14 @@ window.onload = function () {
   if (!AUTO_START) createStartButton();
 };
 events.on("RESOURCES_LOADED", this, () => {
-  resourcesLoaded = true;
   if (!!AUTO_START) {
-    switch (scene) {
+    switch (mode) {
       case 1:
         startMain();
         break;
 
       case 2:
-        startTurn();
+        startTurnBased();
         break;
       default:
         //
