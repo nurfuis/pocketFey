@@ -71,7 +71,7 @@ export class Camera extends GameObject {
   }
 
   driftTowards(center) {
-    const driftAmount = 0.02;
+    const driftAmount = 0.015;
     // .02 = what weve been using
     // .01 = running away from something
 

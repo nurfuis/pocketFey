@@ -23,7 +23,7 @@ import {
   ATTACK_RIGHT,
   ATTACK_DOWN,
 } from "./animations/playerAnimations.js";
-import { DOWN, UP, LEFT, RIGHT } from "./Input.js";
+import { DOWN, UP, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT } from "./Input.js";
 import { events } from "./Events.js";
 
 import { GameObject } from "./GameObject.js";
@@ -58,12 +58,12 @@ export class Player extends GameObject {
     this.powerSupply = new Battery();
     this.powerSupply.storedEnergy = 12000;
     this.powerSupply.storedCapacity = 12000;
-
+    this.powerSupply.dischargeRate = 2; // Amps
     this.motor = new Motor();
     this.motor.KV = 10;
 
     this.transmission = new Transmission();
-    this.transmission.gear = 2;
+    this.transmission.gear = 1;
 
     this._maxSpeed = this.powerSupply.dischargeRate;
 
@@ -155,6 +155,42 @@ export class Player extends GameObject {
             this.body.animations.play("walkDown");
           }
           break;
+        case "UP_LEFT":
+          if (Math.abs(this._acceleration.x) < this._maxSpeed / 2 &&
+            Math.abs(this._acceleration.y) < this._maxSpeed / 2
+          ) {
+            this._acceleration.x -= torque / Math.sqrt(2);
+            this._acceleration.y -= torque / Math.sqrt(2);
+            this.body.animations.play("walkLeft");
+          }
+          break;
+        case "UP_RIGHT":
+          if (Math.abs(this._acceleration.x) < this._maxSpeed / 2 &&
+            Math.abs(this._acceleration.y) < this._maxSpeed / 2
+          ) {
+            this._acceleration.x += torque / Math.sqrt(2);
+            this._acceleration.y -= torque / Math.sqrt(2);
+            this.body.animations.play("walkRight");
+          }
+          break;
+        case "DOWN_LEFT":
+          if (Math.abs(this._acceleration.x) < this._maxSpeed &&
+            Math.abs(this._acceleration.y) < this._maxSpeed / 2
+          ) {
+            this._acceleration.x -= torque / Math.sqrt(2);
+            this._acceleration.y += torque / Math.sqrt(2);
+            this.body.animations.play("walkLeft");
+          }
+          break;
+        case "DOWN_RIGHT":
+          if (Math.abs(this._acceleration.x) < this._maxSpeed &&
+            Math.abs(this._acceleration.y) < this._maxSpeed / 2
+          ) {
+            this._acceleration.x += torque / Math.sqrt(2);
+            this._acceleration.y += torque / Math.sqrt(2);
+            this.body.animations.play("walkRight");
+          }
+          break;
       }
     } else {
       // Reset acceleration to 0 on key release (no input)
@@ -203,18 +239,40 @@ export class Player extends GameObject {
     } else if ((vY < 1 && vY > 0) || (vY > -1 && vY < 0)) {
       this._velocity.y = 0;
     }
-    let nextX;
-    let nextY;
+    let nextX = this.position.x;
+    let nextY = this.position.y;
 
-    if (this.direction == LEFT || this.direction == RIGHT) {
-      nextX = this.position.x + vX;
-      nextY = this.position.y;
-      this._velocity.y = 0;
-    }
-    if (this.direction == UP || this.direction == DOWN) {
-      nextX = this.position.x;
-      nextY = this.position.y + vY;
-      this._velocity.x = 0;
+    switch (this.direction) {
+      case "LEFT":
+        nextX += vX;
+        break;
+      case "RIGHT":
+        nextX += vX;
+        break;
+      case "UP":
+        nextY += vY;
+        break;
+      case "DOWN":
+        nextY += vY;
+        break;
+      case "UP_LEFT":
+        nextX += vX;
+        nextY += vY;
+        break;
+      case "UP_RIGHT":
+        nextX += vX;
+        nextY += vY;
+        break;
+      case "DOWN_LEFT":
+        nextX += vX;
+        nextY += vY;
+        break;
+      case "DOWN_RIGHT":
+        nextX += vX;
+        nextY += vY;
+        break;
+      default:
+        break;
     }
 
     const nextPosition = new Vector2(nextX, nextY);
@@ -335,9 +393,7 @@ export class Player extends GameObject {
     if (this.useAutoInput) {
       this.direction = input.direction || automatedInput.direction;
     } else {
-      this.direction = input?.twoDirections;
-      console.log("dir: ", this.direction);
-      this.direction = input?.direction;
+      this.direction = input?.twoDirections || input?.direction || undefined;
     }
 
     if (this.direction && this.direction != this._lastDirection) {

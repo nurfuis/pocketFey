@@ -6,6 +6,11 @@ export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";
 export const UP = "UP";
 export const DOWN = "DOWN";
+export const UP_LEFT = "UP_LEFT";
+export const UP_RIGHT = "UP_RIGHT";
+export const DOWN_LEFT = "DOWN_LEFT";
+export const DOWN_RIGHT = "DOWN_RIGHT";
+
 
 export const NORTH = "NORTH";
 export const SOUTH = "SOUTH";
@@ -423,7 +428,23 @@ export class Input {
 
   get twoDirections() {
     if (this.heldDirections.length >= 2) {
-      return { direction1: this.heldDirections[0], direction2: this.heldDirections[1] }
+      switch (this.heldDirections[0] + this.heldDirections[1]) {
+        case "UPLEFT":
+        case "LEFTUP":
+          return "UP_LEFT";
+        case "UPRIGHT":
+        case "RIGHTUP":
+          return "UP_RIGHT";
+        case "DOWNLEFT":
+        case "LEFTDOWN":
+          return "DOWN_LEFT";
+        case "DOWNRIGHT":
+        case "RIGHTDOWN":
+          return "DOWN_RIGHT";
+        // Add more cases as needed
+        default:
+          return undefined;
+      }
     } else {
       return undefined;
     }
