@@ -331,9 +331,12 @@ export class Player extends GameObject {
 
     if (!!this.direction) this._lastDirection = this.direction;
 
+
     if (this.useAutoInput) {
       this.direction = input.direction || automatedInput.direction;
     } else {
+      this.direction = input?.twoDirections;
+      console.log("dir: ", this.direction);
       this.direction = input?.direction;
     }
 

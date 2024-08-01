@@ -421,6 +421,14 @@ export class Input {
     return this.heldDirections[0];
   }
 
+  get twoDirections() {
+    if (this.heldDirections.length >= 2) {
+      return { direction1: this.heldDirections[0], direction2: this.heldDirections[1] }
+    } else {
+      return undefined;
+    }
+  }
+
   onArrowPressed(direction) {
     if (!this.isTextFocused) {
       if (this.heldDirections.indexOf(direction) === -1) {
