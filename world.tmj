@@ -153,6 +153,39 @@
                  "width":64,
                  "x":288,
                  "y":224
+                }, 
+                {
+                 "gid":257,
+                 "height":64,
+                 "id":4,
+                 "name":"Blob",
+                 "properties":[
+                        {
+                         "name":"animations",
+                         "type":"string",
+                         "value":"blob"
+                        }, 
+                        {
+                         "name":"brain",
+                         "type":"string",
+                         "value":"blob"
+                        }, 
+                        {
+                         "name":"shadow.offset",
+                         "type":"string",
+                         "value":"-31,-54"
+                        }, 
+                        {
+                         "name":"sprite.offset",
+                         "type":"string",
+                         "value":"-32,-37"
+                        }],
+                 "rotation":0,
+                 "type":"Entity",
+                 "visible":true,
+                 "width":64,
+                 "x":128,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -175,10 +208,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":4,
+ "nextobjectid":5,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.11.0",
  "tileheight":32,
  "tilesets":[
         {

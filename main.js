@@ -13,7 +13,6 @@ import { Vector2 } from "./src/Vector2.js";
 import { GameObject } from "./src/GameObject.js";
 import { GameLoop } from "./src/GameLoop.js";
 import { World } from "./src/World.js";
-import { Grid } from "./src/Grid.js";
 import { Camera } from "./src/Camera.js";
 import { Input } from "./src/Input.js";
 import { AutomatedInput } from "./src/utils/AutomatedInput.js";
@@ -32,6 +31,10 @@ const gameWrapper = createGameWrapper();
 const gameCanvasMain = createGameCanvasMain();
 const ctx = gameCanvasMain.getContext("2d");
 
+const width = gameCanvasMain.width;
+const height = gameCanvasMain.height;
+
+
 const offscreenCanvas = createGameOffscreenCanvas();
 const offscreenCtx = offscreenCanvas.getContext("2d");
 
@@ -40,11 +43,12 @@ let main;
 let world;
 
 let offscreen;
-let grid;
+
+const inventory = new Inventory();
 
 export const player = new Player();
-const inventory = new Inventory();
 player.inventory = inventory;
+
 
 export let entities;
 
@@ -57,12 +61,12 @@ const update = (delta) => {
   }
 
   main.stepEntry(delta, main);
-  offscreen.stepEntry(delta, offscreen);
+  // offscreen.stepEntry(delta, offscreen);
 
   if (!!entities) sortChildren();
 };
 const draw = () => {
-  ctx.clearRect(0, 0, gameCanvasMain.width, gameCanvasMain.height);
+  ctx.clearRect(0, 0, width, height);
   ctx.save();
 
   main?.camera?.follow(ctx, 0, 0);
@@ -71,11 +75,11 @@ const draw = () => {
 
   ctx.restore();
 
-  offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+  // offscreenCtx.clearRect(0, 0, width, height);
 
-  if (showOffscreen) offscreen.draw(offscreenCtx, 0, 0);
+  // if (showOffscreen) offscreen.draw(offscreenCtx, 0, 0);
 
-  ctx.drawImage(offscreenCanvas, 0, 0);
+  // ctx.drawImage(offscreenCanvas, 0, 0);
 
   inventory.draw(ctx, 0, 0);
 };
@@ -166,78 +170,7 @@ function createStartButton() {
   body[0].appendChild(startContainer);
   return startContainer;
 }
-function startTurnBased() {
-  const TIMER = 600;
 
-  let gameStarted = false;
-  let remainingTime = TIMER;
-  let timerInterval;
-
-  function endTurn() {
-    gameLoop.stop();
-    gameLoop.isPaused = true;
-    gameStarted = false;
-  }
-
-  function startTimer() {
-    timerInterval = setInterval(() => {
-      remainingTime--;
-      if (remainingTime <= 0) {
-        clearInterval(timerInterval);
-        endTurn();
-      }
-    }, 1000);
-  }
-
-  function advance() {
-    remainingTime = TIMER;
-    startTimer();
-    gameLoop.start();
-    gameStarted = true;
-  }
-  init();
-  function init() {
-    if (!gameStarted) {
-      offscreen = new GameObject({ position: new Vector2(0, 0) });
-
-      // offscreen.input = new Input(windowWidth / COLUMNS, windowHeight / ROWS);
-      offscreen.automatedInput = automatedInput;
-
-      grid = new Grid();
-      offscreen.addChild(grid);
-
-      remainingTime = TIMER;
-      startTimer();
-
-      gameStarted = true;
-
-      gameCanvasMain.addEventListener("mousedown", (e) => {
-        const rect = gameCanvasMain.getBoundingClientRect();
-
-        const offsetClickX = Math.round(e.clientX - rect.left);
-        const offsetClickY = Math.round(e.clientY - rect.top);
-
-        const mainClickX = Math.round(
-          e.clientX - rect.left - main.camera.position.x - world.tileWidth
-        );
-        const mainCLickY = Math.round(
-          e.clientY - rect.top - main.camera.position.y - world.tileHeight
-        );
-
-        console.log(
-          "Click main:",
-          mainClickX,
-          mainCLickY,
-          "Click offset:",
-          offsetClickX,
-          offsetClickY
-        );
-      });
-
-      gameLoop.start();
-    }
-  }
-}
 async function startMain() {
   mapData = await loadMap();
   main = new GameObject({ position: new Vector2(0, 0) });
@@ -249,6 +182,7 @@ async function startMain() {
   main.addChild(world);
 
   entities = world.children[foreground_id];
+
   entities.addChild(player);
 
   const camera = new Camera(world.tileWidth);
@@ -260,8 +194,29 @@ async function startMain() {
 
   if (debug) console.log(main);
 
-  // gameLoop.start();
-  startTurnBased();
+  gameLoop.start();
+  gameCanvasMain.addEventListener("mousedown", (e) => {
+    const rect = gameCanvasMain.getBoundingClientRect();
+
+    const offsetClickX = Math.round(e.clientX - rect.left);
+    const offsetClickY = Math.round(e.clientY - rect.top);
+
+    const mainClickX = Math.round(
+      e.clientX - rect.left - main.camera.position.x - world.tileWidth
+    );
+    const mainCLickY = Math.round(
+      e.clientY - rect.top - main.camera.position.y - world.tileHeight
+    );
+
+    console.log(
+      "Click main:",
+      mainClickX,
+      mainCLickY,
+      "Click offset:",
+      offsetClickX,
+      offsetClickY
+    );
+  });
 }
 events.on("F1", this, () => {
   switch (state) {
@@ -294,3 +249,4 @@ events.on("RESOURCES_LOADED", this, () => {
   }
   console.log("Resources are Loaded: ", resources);
 });
+

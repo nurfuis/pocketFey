@@ -1,9 +1,9 @@
 {
     "activeFile": "world.tmj",
     "expandedProjectPaths": [
+        "assets",
         ".",
-        "assets/maps",
-        "assets"
+        "assets/maps"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -61,8 +61,8 @@
             "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 182.66666666666669,
-                "y": 202.99999999999997
+                "x": 225.99999999999997,
+                "y": 214.33333333333331
             }
         },
         "world.tmj#base": {
